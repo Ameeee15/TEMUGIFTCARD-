@@ -3,101 +3,43 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For You 💖</title>
-
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<title>Valentine</title>
 
 <style>
-* { margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif; }
-
 body {
-  background: radial-gradient(circle at top, #1a0010, #000);
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0a0a0a;
   color: white;
-  height: 100vh;
-  overflow: hidden;
 }
 
-/* Slides */
 .slide {
   display: none;
   height: 100vh;
   width: 100%;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   text-align: center;
-  padding: 30px;
 }
 
 .slide.active {
   display: flex;
 }
 
-/* Card */
 .card {
   background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(20px);
-  border-radius: 30px;
-  padding: 45px 35px;
-  max-width: 420px;
-  width: 100%;
-  box-shadow: 0 30px 80px rgba(255,215,0,0.25);
-  animation: float 4s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
-}
-
-h1 {
-  font-size: 2.2rem;
-  margin-bottom: 15px;
-  background: linear-gradient(45deg,#ffd700,#ff9fc7);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-p {
-  font-size: 1.1rem;
-  margin-bottom: 25px;
-  opacity: 0.9;
+  padding: 40px;
+  border-radius: 20px;
+  max-width: 400px;
 }
 
 button {
-  padding: 15px 36px;
-  border-radius: 50px;
+  margin-top: 20px;
+  padding: 14px 30px;
+  font-size: 16px;
+  border-radius: 30px;
   border: none;
   cursor: pointer;
-  font-size: 1rem;
-  color: white;
-  background: linear-gradient(45deg,#ffd700,#ff4f9a);
-  box-shadow: 0 15px 40px rgba(255,215,0,0.4);
-  transition: transform 0.2s ease;
-}
-
-button:hover {
-  transform: scale(1.08);
-}
-
-.btn-group {
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-/* Hearts */
-.heart {
-  position: absolute;
-  bottom: -40px;
-  font-size: 22px;
-  animation: rise linear infinite;
-}
-
-@keyframes rise {
-  0% { transform: translateY(0); opacity:0; }
-  20% { opacity:1; }
-  100% { transform: translateY(-120vh); opacity:0; }
 }
 </style>
 </head>
@@ -106,25 +48,17 @@ button:hover {
 
 <div class="slide active">
   <div class="card">
-    <h1>Hey You 💖</h1>
-    <p>I made something just for you</p>
-    <button onclick="nextSlide()">Begin ✨</button>
+    <h1>Hey 💖</h1>
+    <p>This is just for you</p>
+    <button onclick="next()">Begin</button>
   </div>
 </div>
 
 <div class="slide">
   <div class="card">
-    <h1>Main Character</h1>
-    <p>You don’t try — you just are.</p>
-    <button onclick="nextSlide()">Next 💫</button>
-  </div>
-</div>
-
-<div class="slide">
-  <div class="card">
-    <h1>Be Honest…</h1>
-    <p>You felt this coming 😌</p>
-    <button onclick="nextSlide()">Tell Me 💘</button>
+    <h1>You’re special</h1>
+    <p>I really mean that</p>
+    <button onclick="next()">Next</button>
   </div>
 </div>
 
@@ -132,62 +66,26 @@ button:hover {
   <div class="card">
     <h1>So…</h1>
     <p>Will you be my Valentine?</p>
-    <div class="btn-group">
-      <button onclick="finale()">YES 💖</button>
-      <button onclick="finale()">Obviously 😍</button>
-    </div>
+    <button onclick="next()">Yes 💖</button>
   </div>
 </div>
 
 <div class="slide">
   <div class="card">
-    <h1>👑 Chosen 👑</h1>
-    <p>You’re special. And you always were.</p>
-    <button onclick="share()">Share This 💌</button>
+    <h1>Chosen 👑</h1>
+    <p>Always.</p>
   </div>
 </div>
 
 <script>
-let current = 0;
+let index = 0;
 const slides = document.querySelectorAll('.slide');
 
-function nextSlide() {
-  slides[current].classList.remove('active');
-  current++;
-  if (current < slides.length) {
-    slides[current].classList.add('active');
-  }
-}
-
-function finale() {
-  nextSlide();
-  confetti({
-    particleCount: 300,
-    spread: 160,
-    origin: { y: 0.6 }
-  });
-  for (let i = 0; i < 40; i++) createHeart();
-}
-
-function createHeart() {
-  const h = document.createElement('div');
-  h.className = 'heart';
-  h.textContent = '💖';
-  h.style.left = Math.random() * 100 + 'vw';
-  h.style.animationDuration = (3 + Math.random() * 3) + 's';
-  document.body.appendChild(h);
-  setTimeout(() => h.remove(), 6000);
-}
-
-function share() {
-  if (navigator.share) {
-    navigator.share({
-      title: 'Valentine 💖',
-      text: 'Someone made this just for me ✨',
-      url: location.href
-    });
-  } else {
-    alert('Copy the link and share it 💕');
+function next() {
+  slides[index].classList.remove('active');
+  index++;
+  if (index < slides.length) {
+    slides[index].classList.add('active');
   }
 }
 </script>
@@ -195,6 +93,3 @@ function share() {
 </body>
 </html>
 
-
-<div class="slide">
-  <div class="card">
