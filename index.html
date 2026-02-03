@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>MiMi 💖 A Very Serious Question</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MiMi 💖 System Message</title>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
 <style>
 :root{
-  --pink1:#ffd1e8;
-  --pink2:#fff0f7;
-  --card:#ffffffee;
-  --yes:#ff2f7b;
-  --yesHover:#ff145f;
+  --pink:#ff2f7b;
+  --bg1:#ffd6ea;
+  --bg2:#fff3f9;
 }
 
 *{box-sizing:border-box}
@@ -23,8 +21,8 @@ body{
   min-height:100svh;
   display:grid;
   place-items:center;
-  background:radial-gradient(circle at top,var(--pink2),var(--pink1));
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+  background:radial-gradient(circle at top,var(--bg2),var(--bg1));
+  font-family:system-ui,-apple-system,sans-serif;
   overflow:hidden;
   padding:14px;
 }
@@ -38,31 +36,30 @@ canvas{
 
 .card{
   width:min(720px,96vw);
-  padding:30px 22px 34px;
-  background:var(--card);
+  padding:28px 22px 34px;
+  background:#ffffffee;
   backdrop-filter:blur(12px);
-  border-radius:28px;
+  border-radius:26px;
+  box-shadow:0 30px 90px rgba(0,0,0,.25);
   text-align:center;
-  box-shadow:0 30px 90px rgba(0,0,0,.2);
 }
 
 h1{
-  font-size:clamp(26px,4.5vw,48px);
+  font-size:clamp(24px,4.5vw,46px);
   margin:10px 0;
 }
 
 p{
   font-size:16px;
-  opacity:.82;
-  margin-bottom:20px;
+  opacity:.85;
+  min-height:48px;
 }
 
 .zone{
   position:relative;
   width:min(520px,100%);
-  height:180px;
-  margin:0 auto;
-  touch-action:none;
+  height:170px;
+  margin:18px auto;
 }
 
 button{
@@ -75,49 +72,27 @@ button{
   border-radius:999px;
   border:none;
   cursor:pointer;
-  box-shadow:0 14px 30px rgba(0,0,0,.18);
-  user-select:none;
-  -webkit-tap-highlight-color:transparent;
-  transition:transform .15s ease,background .15s ease;
+  box-shadow:0 14px 30px rgba(0,0,0,.2);
 }
 
 #yes{
   left:16%;
-  background:var(--yes);
+  background:var(--pink);
   color:#fff;
 }
 
-#yes:hover{background:var(--yesHover)}
-
 #no{
-  left:64%;
+  left:62%;
   background:#e5e7eb;
-  color:#111;
 }
 
-.hint{
-  margin-top:14px;
-  font-size:14px;
-  min-height:22px;
-  opacity:.7;
-}
-
-.fake{
+.log{
   font-size:13px;
   opacity:.6;
-  margin-top:8px;
+  min-height:22px;
 }
 
-.result{
-  display:none;
-  margin-top:26px;
-  animation:pop .5s ease;
-}
-
-@keyframes pop{
-  from{transform:scale(.9);opacity:0}
-  to{transform:scale(1);opacity:1}
-}
+.hidden{display:none}
 
 audio{display:none}
 </style>
@@ -130,148 +105,147 @@ audio{display:none}
   <source src="https://assets.mixkit.co/music/preview/mixkit-romantic-piano-loop-779.mp3">
 </audio>
 
-<main class="card" id="card">
-  <h1 id="title">MiMi… 🥹💖</h1>
-  <p id="subtitle">
-    This page has one purpose.  
-    One question.  
-    One correct answer.
-  </p>
-
-  <h1 id="question">Will you be my Valentine?</h1>
+<main class="card">
+  <h1 id="title">System Initializing…</h1>
+  <p id="dialogue"></p>
 
   <div class="zone" id="zone">
-    <button id="yes">YES 💘</button>
-    <button id="no">No 🙄</button>
+    <button id="yes">YES 💖</button>
+    <button id="no">No ❌</button>
   </div>
 
-  <div class="hint" id="hint">
-    ⚠️ “No” may cause emotional consequences.
-  </div>
-  <div class="fake" id="fake"></div>
-
-  <div class="result" id="result">
-    <h1>OKAY OKAY 😭❤️</h1>
-    <p>
-      You win. Or actually…  
-      **WE** win.
-    </p>
-    <p>
-      MiMi, this wasn’t just a page.  
-      It’s a memory.  
-      And I hope you never forget how special you are to me.
-    </p>
-    <h1>💍 Be mine. Always.</h1>
-    <img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" width="260">
-  </div>
+  <div class="log" id="log"></div>
 </main>
 
 <script>
-const zone=document.getElementById("zone");
+const title=document.getElementById("title");
+const dialogue=document.getElementById("dialogue");
 const yes=document.getElementById("yes");
 const no=document.getElementById("no");
-const hint=document.getElementById("hint");
-const fake=document.getElementById("fake");
-const result=document.getElementById("result");
-const canvas=document.getElementById("confetti");
+const zone=document.getElementById("zone");
+const log=document.getElementById("log");
 const music=document.getElementById("music");
+const canvas=document.getElementById("confetti");
 
-const sass=[
-  "Be honest… you’re smiling 😏",
-  "MiMi… don’t embarrass yourself.",
-  "This is not a real option.",
-  "Universe rejected your request ❌",
-  "Why are you running 😭",
-  "Just press YES already 💀"
+const confettiInstance=confetti.create(canvas,{resize:true,useWorker:true});
+
+const stages=[
+  "Hello MiMi 💕",
+  "This system was designed for ONE decision.",
+  "We tested every possibility.",
+  "Except… you pressing No.",
+  "That was not expected.",
+  "Please reconsider 😐"
 ];
 
-let count=0;
+let stage=0;
+let typing=false;
+
+function type(text,cb){
+  typing=true;
+  dialogue.textContent="";
+  let i=0;
+  const t=setInterval(()=>{
+    dialogue.textContent+=text[i++];
+    if(i>=text.length){
+      clearInterval(t);
+      typing=false;
+      cb&&cb();
+    }
+  },35);
+}
+
+function nextStage(){
+  if(stage<stages.length){
+    type(stages[stage++]);
+  }
+}
+
+nextStage();
+setTimeout(nextStage,1200);
+setTimeout(nextStage,2600);
+
+let noCount=0;
 let yesScale=1;
 
-/* CONFETTI */
-function resize(){
-  const dpr=window.devicePixelRatio||1;
-  canvas.width=innerWidth*dpr;
-  canvas.height=innerHeight*dpr;
-  canvas.style.width="100vw";
-  canvas.style.height="100vh";
+/* NO CLICK DRAMA */
+no.addEventListener("click",()=>{
+  if(typing) return;
+
+  noCount++;
+  navigator.vibrate?.(60);
+
+  if(noCount===1){
+    type("ERROR: Emotional conflict detected ⚠️");
+    log.textContent="Attempting recovery…";
+  }
+  else if(noCount===2){
+    type("System unstable… MiMi please don’t do this.");
+    no.disabled=true;
+    log.textContent="No button temporarily disabled.";
+    setTimeout(()=>{no.disabled=false;log.textContent="No button restored.";},2000);
+  }
+  else if(noCount===3){
+    type("Last warning. Heart integrity at risk 💔");
+    countdown();
+  }
+  else{
+    forceYes();
+  }
+});
+
+/* COUNTDOWN PRESSURE */
+function countdown(){
+  let n=5;
+  log.textContent="Decision required in "+n;
+  const c=setInterval(()=>{
+    n--;
+    log.textContent="Decision required in "+n;
+    if(n===0){
+      clearInterval(c);
+      forceYes();
+    }
+  },1000);
 }
-resize();
-addEventListener("resize",resize);
 
-const confettiInstance=confetti.create(canvas,{resize:false,useWorker:true});
-
-/* NO ESCAPE */
-function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
-
-function dodge(px,py){
-  const z=zone.getBoundingClientRect();
-  const b=no.getBoundingClientRect();
-  let dx=(b.left+b.width/2)-px;
-  let dy=(b.top+b.height/2)-py;
-  let mag=Math.hypot(dx,dy)||1;
-  dx/=mag; dy/=mag;
-
-  no.style.left=clamp((b.left-z.left)+dx*160,0,z.width-b.width)+"px";
-  no.style.top=clamp((b.top-z.top)+dy*160,0,z.height-b.height)+"px";
-  no.style.transform="none";
-
-  yesScale=Math.min(2.8,yesScale+.12);
-  yes.style.transform=`translateY(-50%) scale(${yesScale})`;
-
-  hint.textContent=sass[count%sass.length];
-  fake.textContent="System message: rejecting NO ("+(count+1)+")";
-  count++;
-}
-
+/* YES GROWS */
 zone.addEventListener("pointermove",e=>{
   const b=no.getBoundingClientRect();
-  if(Math.hypot(
-    (b.left+b.width/2)-e.clientX,
-    (b.top+b.height/2)-e.clientY
-  )<160) dodge(e.clientX,e.clientY);
+  if(Math.hypot((b.left+b.width/2)-e.clientX,(b.top+b.height/2)-e.clientY)<140){
+    no.style.left=Math.random()*(zone.clientWidth-80)+"px";
+    no.style.top=Math.random()*(zone.clientHeight-40)+"px";
+    yesScale=Math.min(3,yesScale+.12);
+    yes.style.transform=`translateY(-50%) scale(${yesScale})`;
+  }
 });
 
-no.addEventListener("click",e=>e.preventDefault());
-
-/* YES */
+/* YES CLICK */
 yes.addEventListener("click",()=>{
   music.play().catch(()=>{});
-  zone.style.display="none";
-  hint.style.display="none";
-  fake.style.display="none";
-  result.style.display="block";
-
-  const end=Date.now()+1800;
-  (function frame(){
-    confettiInstance({
-      particleCount:14,
-      spread:100,
-      startVelocity:45,
-      origin:{x:Math.random(),y:Math.random()*0.4}
-    });
-    if(Date.now()<end)requestAnimationFrame(frame);
-  })();
-
-  setTimeout(()=>{
-    confettiInstance({
-      particleCount:350,
-      spread:150,
-      startVelocity:65,
-      origin:{x:.5,y:.6}
-    });
-  },400);
+  endGame();
 });
 
-/* SECRET WAIT */
-setTimeout(()=>{
-  if(result.style.display!=="block"){
-    hint.textContent="Destiny is getting impatient 😌";
-  }
-},12000);
+/* FORCED END (FUNNY) */
+function forceYes(){
+  type("Decision overridden. Choosing YES for MiMi 💖");
+  setTimeout(endGame,1200);
+}
+
+function endGame(){
+  title.textContent="💖 SYSTEM SUCCESS 💖";
+  dialogue.innerHTML="MiMi…<br>This wasn’t code.<br>This was me choosing you.";
+  zone.classList.add("hidden");
+  log.textContent="Memory saved forever.";
+
+  confettiInstance({
+    particleCount:400,
+    spread:160,
+    startVelocity:60,
+    origin:{x:.5,y:.6}
+  });
+}
 </script>
 </body>
 </html>
-
 
 
