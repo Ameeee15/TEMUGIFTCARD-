@@ -9,14 +9,12 @@
 
 <style>
 * {margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-
-:root {
-  --bg1:#000; --bg2:#1a0010; --accent:#ff9fc7;
-}
+:root { --bg1:#000; --bg2:#1a0010; --accent:#ff9fc7; }
 body.rose { --bg1:#2b0014; --bg2:#7a0036; --accent:#ffd1dc; }
 
 body {
-  height:100vh; overflow:hidden;
+  height:100vh;
+  overflow:hidden;
   background:radial-gradient(circle at top,var(--bg2),var(--bg1));
   color:white;
   transition:background 0.8s ease;
@@ -32,9 +30,7 @@ body {
   z-index:0;
 }
 
-.slide.active {
-  opacity:1; transform:translateY(0); z-index:2;
-}
+.slide.active { opacity:1; transform:translateY(0); z-index:2; }
 
 .card {
   background: rgba(255,255,255,0.08);
@@ -46,17 +42,12 @@ body {
 }
 
 h1 {
-  font-size:2.3rem;
-  margin-bottom:15px;
+  font-size:2.3rem; margin-bottom:15px;
   background:linear-gradient(45deg,#ffd700,#ff9fc7);
   -webkit-background-clip:text; -webkit-text-fill-color:transparent;
   animation: glow 2.5s ease-in-out infinite alternate;
 }
-
-@keyframes glow {
-  0% { text-shadow:0 0 8px #ffd700; }
-  100% { text-shadow:0 0 24px #ff9fc7; }
-}
+@keyframes glow { 0%{text-shadow:0 0 8px #ffd700;}100%{text-shadow:0 0 24px #ff9fc7;} }
 
 p { font-size:1.15rem; opacity:0.9; margin-bottom:22px; }
 
@@ -71,7 +62,6 @@ button:hover { transform:scale(1.08); box-shadow:0 20px 60px rgba(255,215,0,0.55
 
 .btn-group { display:flex; gap:15px; justify-content:center; flex-wrap:wrap; }
 .toggle { margin-top:15px; font-size:0.95rem; opacity:0.8; cursor:pointer; }
-
 .countdown { font-size:1.15rem; letter-spacing:1px; margin-bottom:25px; color:var(--accent); }
 
 /* Hearts */
@@ -104,7 +94,7 @@ button:hover { transform:scale(1.08); box-shadow:0 20px 60px rgba(255,215,0,0.55
 
 <div class="slide">
   <div class="card">
-    <h1>Countdown to Valentines 💕</h1>
+    <h1>Countdown to Valentine’s 💕</h1>
     <div id="countdown" class="countdown"></div>
     <button onclick="nextSlide()">Tell Me 👀</button>
   </div>
@@ -116,7 +106,7 @@ button:hover { transform:scale(1.08); box-shadow:0 20px 60px rgba(255,215,0,0.55
     <p>Will you be my Valentine?</p>
     <div class="btn-group">
       <button onclick="finale()">YES 💖</button>
-      <button onclick="finale()">NOT NO 😍</button>
+      <button onclick="finale()">NOT NO 😈</button>
     </div>
   </div>
 </div>
@@ -141,10 +131,10 @@ function nextSlide(){
   if(current<slides.length){ slides[current].classList.add('active'); }
 }
 
-/* Finale with cinematic confetti + hearts */
+/* Finale */
 function finale(){
   nextSlide();
-  confetti({particleCount:400,spread:180,origin:{y:0.6},colors:['#ffd700','#ff4f9a','#ffb6c1']});
+  confetti({particleCount:400, spread:180, origin:{y:0.6}, colors:['#ffd700','#ff4f9a','#ffb6c1']});
   for(let i=0;i<60;i++) createHeart();
 }
 
@@ -169,7 +159,7 @@ setInterval(()=>{
   const d=Math.floor(diff/86400000);
   const h=Math.floor((diff/3600000)%24);
   const m=Math.floor((diff/60000)%60);
-  countdownEl.textContent=${d}d ${h}h ${m}m until Valentine’s 💘;
+  countdownEl.textContent = ${d}d ${h}h ${m}m until Valentines 💘;
 },1000);
 
 /* Swipe support */
@@ -188,7 +178,7 @@ function share(){
   else{alert('Copy the link and share the love 💕');}
 }
 
-/* Cinematic gold glitter trail */
+/* Glitter trail */
 document.addEventListener('mousemove',sparkle);
 document.addEventListener('touchmove',e=>sparkle(e.touches[0]));
 function sparkle(e){
