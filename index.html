@@ -1,9 +1,35 @@
-<!DOCTYPE html>
+[12:02 PM, 2/3/2026] My Son: <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>For You 💖</title>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+<style>
+* {margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+:root { --bg1:#000; --bg2:#1a0010; --accent:#ff9fc7; }
+body.rose { --bg1:#2b0014; --bg2:#7a0036; --accent:#ffd1dc; }
+
+body {
+  height:100vh;
+  overflow:hidden;
+  background:radial-gradient(circle at top,var(--bg2),var(--bg1));
+  color:white;
+  transition:background 0.8s ease;
+}
+
+/* Slide container */
+.slide {
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  display:flex; align-items:cente…
+[12:08 PM, 2/3/2026] My Son: <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ultimate Valentine 💖</title>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 <style>
 * {margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
@@ -12,28 +38,63 @@ body.rose { --bg1:#2b0014; --bg2:#7a0036; --accent:#ffd1dc; }
 
 body { height:100vh; overflow:hidden; background:radial-gradient(circle at top,var(--bg2),var(--bg1)); color:white; transition:background 0.8s ease; }
 
-.slide { position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; text-align:center; padding:30px; opacity:0; transform:translateY(50px); transition:all 0.7s cubic-bezier(0.25,1,0.5,1); z-index:0; }
-.slide.active { opacity:1; transform:translateY(0); z-index:2; }
+.slide { position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; text-align:…
+[12:13 PM, 2/3/2026] My Son: <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ultimate Valentine 💖</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+:root{--bg1:#000;--bg2:#1a0010;--accent:#ff9fc7;}
+body.rose{--bg1:#2b0014;--bg2:#7a0036;--accent:#ffd1dc;}
+body{height:100vh;overflow:hidden;background:radial-gradient(circle at top,var(--bg2),var(--bg1));color:white;transition:background 0.8s ease;}
 
-.card { background: rgba(255,255,255,0.08); backdrop-filter: blur(22px); border-radius:34px; padding:46px 36px; max-width:430px; width:90%; box-shadow:0 40px 100px rgba(255,180,120,0.25); }
+/* Slides using display */
+.slide{position:absolute;top:0;left:0;width:100%;height:100%;display:none;align-items:center;justify-content:center;text-align:center;padding:30px;}
+.slide.active{display:flex;}
 
-h1 { font-size:2.3rem; margin-bottom:15px; background:linear-gradient(45deg,#ffd700,#ff9fc7); -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation: glow 2.5s ease-in-out infinite alternate; }
-@keyframes glow { 0%{text-shadow:0 0 8px #ffd700;}100%{text-shadow:0 0 24px #ff9fc7;} }
+.card{background: rgba(255,255,255,0.08);backdrop-filter: blur(22px);border-radius:34px;padding:46px 36px;max-width:430px;width:90%;box-shadow:0 40px 100px rgba(255,180,120,0.25);}
+h1{font-size:2.3rem;margin-bottom:15px;background:linear-gradient(45deg,#ffd700,#ff9fc7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:glow 2.5s ease-in-out infinite alternate;}
+@keyframes glow{0%{text-shadow:0 0 8px #ffd700;}100%{text-shadow:0 0 24px #ff9fc7;}}
 
-p { font-size:1.15rem; opacity:0.9; margin-bottom:22px; }
+p{font-size:1.15rem;opacity:0.9;margin-bottom:22px;}
+button{background:linear-gradient(45deg,#ffd700,#ff4f9a);border:none;color:white;padding:15px 36px;border-radius:50px;font-size:1rem;cursor:pointer;box-shadow:0 18px 45px rgba(255,215,0,0.45);transition: transform 0.2s ease, box-shadow 0.2s ease;position:relative;}
+button:hover{transform:scale(1.08);box-shadow:0 20px 60px rgba(255,215,0,0.55);}
 
-button { background:linear-gradient(45deg,#ffd700,#ff4f9a); border:none; color:white; padding:15px 36px; border-radius:50px; font-size:1rem; cursor:pointer; box-shadow:0 18px 45px rgba(255,215,0,0.45); transition: transform 0.2s ease, box-shadow 0.2s ease; }
-button:hover { transform:scale(1.08); box-shadow:0 20px 60px rgba(255,215,0,0.55); }
+/* Button glow pulse */
+button::after{
+  content:'';
+  position:absolute;
+  top:-6px; left:-6px; right:-6px; bottom:-6px;
+  border-radius:50px;
+  box-shadow:0 0 20px rgba(255,215,0,0.6),0 0 40px rgba(255,159,199,0.4);
+  opacity:0;
+  transition:opacity 0.3s ease;
+}
+button:hover::after{
+  opacity:1;
+  animation:pulse 1s infinite;
+}
+@keyframes pulse{
+  0%{transform:scale(1);opacity:0.6;}
+  50%{transform:scale(1.1);opacity:1;}
+  100%{transform:scale(1);opacity:0.6;}
+}
 
-.btn-group { display:flex; gap:15px; justify-content:center; flex-wrap:wrap; }
-.toggle { margin-top:15px; font-size:0.95rem; opacity:0.8; cursor:pointer; }
-.countdown { font-size:1.15rem; letter-spacing:1px; margin-bottom:25px; color:var(--accent); }
+.btn-group{display:flex;gap:15px;justify-content:center;flex-wrap:wrap;}
+.toggle{margin-top:15px;font-size:0.95rem;opacity:0.8;cursor:pointer;}
+.countdown{font-size:1.15rem;letter-spacing:1px;margin-bottom:25px;color:var(--accent);}
 
-.heart { position:absolute; bottom:-40px; font-size:22px; animation:rise linear infinite; opacity:0.85; z-index:1; }
-@keyframes rise { 0%{transform:translateY(0) scale(1); opacity:0} 15%{opacity:1} 100%{transform:translateY(-120vh) scale(1.6); opacity:0} }
+/* Hearts */
+.heart{position:absolute;bottom:-40px;font-size:22px;animation:rise linear infinite;opacity:0.85;z-index:1;}
+@keyframes rise{0%{transform:translateY(0) scale(1);opacity:0}15%{opacity:1}100%{transform:translateY(-120vh) scale(1.6);opacity:0;}}
 
-.glitter { position:fixed; width:10px; height:10px; background:radial-gradient(circle,#ffd700,rgba(255,215,0,0.05)); border-radius:50%; pointer-events:none; animation:sparkle 1.2s linear forwards; z-index:1; }
-@keyframes sparkle { 0%{transform:scale(1);opacity:1} 100%{transform:scale(0);opacity:0} }
+/* Glitter */
+.glitter{position:fixed;width:10px;height:10px;background:radial-gradient(circle,#ffd700,rgba(255,215,0,0.05));border-radius:50%;pointer-events:none;animation:sparkle 1.2s linear forwards;z-index:1;}
+@keyframes sparkle{0%{transform:scale(1);opacity:1}100%{transform:scale(0);opacity:0}}
 </style>
 </head>
 <body>
@@ -69,7 +130,7 @@ button:hover { transform:scale(1.08); box-shadow:0 20px 60px rgba(255,215,0,0.55
     <p>Will you be my Valentine?</p>
     <div class="btn-group">
       <button id="btn-yes">YES 💖</button>
-      <button id="btn-absolutely">ABSOLUTELY 😍</button>
+      <button id="btn-absolutely">NOT NO 😈</button>
     </div>
   </div>
 </div>
@@ -77,14 +138,14 @@ button:hover { transform:scale(1.08); box-shadow:0 20px 60px rgba(255,215,0,0.55
 <div class="slide">
   <div class="card">
     <h1>👑 QUEEN OF MY WORLD 👑</h1>
-    <p>You’re adored, celebrated, and chosen. Now and always.</p>
+    <p>You’re adored, celebrated, and chosen. Forever loved.</p>
     <button id="btn-share">Share This Moment 📲</button>
     <div class="toggle" id="btn-toggle">Switch Mood 🌙</div>
   </div>
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function(){
+document.addEventListener("DOMContentLoaded",function(){
 
   let current=0;
   const slides=document.querySelectorAll('.slide');
@@ -92,12 +153,12 @@ document.addEventListener("DOMContentLoaded", function(){
   function nextSlide(){
     slides[current].classList.remove('active');
     current++;
-    if(current<slides.length){ slides[current].classList.add('active'); }
+    if(current<slides.length) slides[current].classList.add('active');
   }
 
   function finale(){
     nextSlide();
-    confetti({particleCount:400, spread:180, origin:{y:0.6}, colors:['#ffd700','#ff4f9a','#ffb6c1']});
+    confetti({particleCount:400,spread:180,origin:{y:0.6},colors:['#ffd700','#ff4f9a','#ffb6c1']});
     for(let i=0;i<60;i++) createHeart();
   }
 
@@ -125,18 +186,18 @@ document.addEventListener("DOMContentLoaded", function(){
   },1000);
 
   /* Buttons */
-  document.getElementById("btn-begin").addEventListener("click", nextSlide);
-  document.getElementById("btn-next1").addEventListener("click", nextSlide);
-  document.getElementById("btn-next2").addEventListener("click", nextSlide);
-  document.getElementById("btn-yes").addEventListener("click", finale);
-  document.getElementById("btn-absolutely").addEventListener("click", finale);
-  document.getElementById("btn-share").addEventListener("click", function(){
-    if(navigator.share){ navigator.share({title:'Valentine 💖', text:'Someone made this just for me 👑✨', url:location.href}); }
-    else{ alert('Copy the link and share the love 💕'); }
+  document.getElementById("btn-begin").addEventListener("click",nextSlide);
+  document.getElementById("btn-next1").addEventListener("click",nextSlide);
+  document.getElementById("btn-next2").addEventListener("click",nextSlide);
+  document.getElementById("btn-yes").addEventListener("click",finale);
+  document.getElementById("btn-absolutely").addEventListener("click",finale);
+  document.getElementById("btn-share").addEventListener("click",function(){
+    if(navigator.share){navigator.share({title:'Valentine 💖', text:'Someone made this just for me 👑✨', url:location.href});}
+    else{alert('Copy the link and share the love 💕');}
   });
-  document.getElementById("btn-toggle").addEventListener("click", ()=>document.body.classList.toggle('rose'));
+  document.getElementById("btn-toggle").addEventListener("click",()=>document.body.classList.toggle('rose'));
 
-  /* Swipe support */
+  /* Swipe support for touchscreens */
   let startY=0;
   document.addEventListener('touchstart',e=>startY=e.touches[0].clientY);
   document.addEventListener('touchend',e=>{
