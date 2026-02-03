@@ -1,146 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MiMi 💖</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Mimi – Cinematic Reel</title>
 
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&display=swap" rel="stylesheet">
 
 <style>
-body{
-  margin:0;
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:linear-gradient(135deg,#ffe3f0,#fff7fb);
-  font-family:system-ui,-apple-system,sans-serif;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.card{
-  background:white;
-  width:min(680px,94vw);
-  border-radius:24px;
-  padding:32px 24px;
-  box-shadow:0 30px 80px rgba(0,0,0,.18);
-  text-align:center;
+body {
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at center, #0c0c0c 0%, #000 75%);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Cinzel', serif;
 }
 
-h1{
-  font-size:clamp(26px,4vw,44px);
-  margin-bottom:8px;
+/* CINEMATIC VIGNETTE */
+body::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.8) 85%);
+  z-index: 5;
 }
 
-p{
-  opacity:.8;
-  margin-bottom:24px;
+/* FLOATING GOLD PARTICLES */
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: gold;
+  opacity: 0.4;
+  animation: float 8s linear infinite;
 }
 
-.options{
-  display:grid;
-  gap:14px;
-  margin-top:18px;
+@keyframes float {
+  from { transform: translateY(100vh); }
+  to { transform: translateY(-20vh); }
 }
 
-button{
-  padding:16px;
-  border-radius:14px;
-  border:none;
-  font-size:16px;
-  font-weight:700;
-  cursor:pointer;
-  background:#f1f5f9;
+/* NAME CONTAINER */
+.container {
+  position: relative;
+  z-index: 10;
+  transform: scale(1.1);
 }
 
-button:hover{
-  background:#ffd6ea;
+/* GOLD TEXT */
+.text {
+  font-size: 4.5rem;
+  letter-spacing: 0.15em;
+  color: #ffd36a;
+  text-shadow:
+    0 0 10px rgba(255,215,0,0.4),
+    0 0 30px rgba(255,215,0,0.35),
+    0 0 80px rgba(255,215,0,0.2);
+  opacity: 0;
+  transform: translateY(30px) scale(0.95);
 }
 
-.fade{
-  animation:fade .4s ease;
+/* REVEAL ANIMATION */
+.reveal {
+  animation: reveal 1.8s ease-out forwards;
 }
 
-@keyframes fade{
-  from{opacity:0;transform:translateY(10px)}
-  to{opacity:1;transform:none}
+@keyframes reveal {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* SUBTITLE */
+.subtitle {
+  margin-top: 18px;
+  font-size: 0.9rem;
+  letter-spacing: 0.4em;
+  color: rgba(255,255,255,0.6);
+  opacity: 0;
+  animation: fadeIn 1.5s ease forwards;
+  animation-delay: 1.6s;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
 }
 </style>
 </head>
 
 <body>
 
-<div class="card fade" id="card">
-  <h1 id="title">Hey MiMi 💖</h1>
-  <p id="text">Before I ask you something important…<br>play along for a second.</p>
-
-  <div class="options" id="options">
-    <button onclick="next(1)">Okay 👀</button>
-    <button onclick="next(1)">Fine… 😌</button>
-  </div>
+<div class="container">
+  <div class="text" id="name"></div>
+  <div class="subtitle">LIMITLESS</div>
 </div>
 
 <script>
-const steps=[
-{
-  title:"Question 1",
-  text:"Who causes more chaos together?",
-  options:["You 😇","Me 😏","Both (correct answer)"]
-},
-{
-  title:"Question 2",
-  text:"What are we best at?",
-  options:["Laughing","Eating","Annoying each other","All of the above"]
-},
-{
-  title:"Final Question",
-  text:"So MiMi… after all this…",
-  options:["Yes ❤️","Obviously yes 🙄"]
-}
-];
+/* NAME */
+const name = "Mimi";
+const nameEl = document.getElementById("name");
 
-let step=0;
-const card=document.getElementById("card");
-const title=document.getElementById("title");
-const text=document.getElementById("text");
-const options=document.getElementById("options");
+/* TYPEWRITER + CINEMATIC PAUSE */
+let index = 0;
 
-function next(custom){
-  if(custom){ step=0; render(); return; }
-  step++;
-  if(step<steps.length) render();
-  else end();
+function typeName() {
+  if (index < name.length) {
+    nameEl.textContent += name[index];
+    index++;
+    setTimeout(typeName, 220);
+  } else {
+    nameEl.classList.add("reveal");
+    setTimeout(loop, 3500);
+  }
 }
 
-function render(){
-  card.classList.remove("fade");
-  void card.offsetWidth;
-  card.classList.add("fade");
-
-  title.textContent=steps[step].title;
-  text.textContent=steps[step].text;
-  options.innerHTML="";
-
-  steps[step].options.forEach(o=>{
-    const b=document.createElement("button");
-    b.textContent=o;
-    b.onclick=next;
-    options.appendChild(b);
-  });
+function loop() {
+  index = 0;
+  nameEl.textContent = "";
+  nameEl.classList.remove("reveal");
+  setTimeout(typeName, 1200);
 }
 
-function end(){
-  title.textContent="MiMi ❤️";
-  text.innerHTML="This wasn’t a game.<br>It was me saying…";
-  options.innerHTML="<h1>Will you be my Valentine? 💘</h1>";
-
-  confetti({
-    particleCount:300,
-    spread:140,
-    startVelocity:50,
-    origin:{x:.5,y:.6}
-  });
+/* PARTICLES */
+for (let i = 0; i < 80; i++) {
+  const p = document.createElement("div");
+  p.className = "particle";
+  p.style.left = Math.random() * 100 + "vw";
+  p.style.animationDuration = 5 + Math.random() * 6 + "s";
+  p.style.opacity = Math.random();
+  document.body.appendChild(p);
 }
+
+/* START */
+setTimeout(typeName, 800);
 </script>
 
 </body>
