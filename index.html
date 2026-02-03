@@ -1,9 +1,52 @@
-<!DOCTYPE html>
+[10:41 AM, 2/3/2026] My Son: <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For the love of my life 💖</title>
+<title>For You 💖</title>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+:root {
+  --bg1: #000;
+  --bg2: #1a0010;
+  --accent: #ff9fc7;
+}
+
+body.rose {
+  --bg1: #2b0014;
+  --bg2: #7a0036;
+  --accent: #ffd1dc;
+}
+
+body {
+  height: 100vh;
+  overflow: hidden;
+  background: radial-gradient(circle at top, var(--bg2), var(--bg1));
+  color: white;
+  transition: background 0.8s ease;
+}
+
+/* Slides */
+.slide {
+  height: 100vh;
+  width: 100%;
+  display: none;
+  align-items: cente…
+[11:29 AM, 2/3/2026] My Son: <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You 💖</title>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
@@ -119,7 +162,7 @@ button:hover {
   cursor: pointer;
 }
 
-/* Hearts */
+/* Floating hearts */
 .heart {
   position: absolute;
   bottom: -40px;
@@ -135,7 +178,7 @@ button:hover {
   100% { transform: translateY(-120vh) scale(1.6); opacity: 0; }
 }
 
-/* GOLD GLITTER */
+/* Gold glitter trail */
 .glitter {
   position: fixed;
   width: 8px;
@@ -156,20 +199,16 @@ button:hover {
 
 <body>
 
-<!-- MUSIC -->
-<audio id="bgMusic" loop>
-  <source src="https://cdn.pixabay.com/audio/2023/02/14/audio_2b6f9d75d7.mp3" type="audio/mpeg">
-</audio>
-
-<!-- SLIDES -->
+<!-- SLIDE 1 -->
 <div class="slide active">
   <div class="card">
     <h1>MiMi 💖</h1>
-    <p>I made something unforgettable… just for you ✨</p>
+    <p>A little something for the prettiest girl  ✨</p>
     <button onclick="nextSlide()">Begin 💫</button>
   </div>
 </div>
 
+<!-- SLIDE 2 -->
 <div class="slide">
   <div class="card">
     <h1>Main Character Energy</h1>
@@ -178,25 +217,28 @@ button:hover {
   </div>
 </div>
 
+<!-- SLIDE 3 -->
 <div class="slide">
   <div class="card">
-    <h1>Countdown to Valentine’s 💕</h1>
+    <h1>Countdown to Valentines 💕</h1>
     <div id="countdown" class="countdown"></div>
     <button onclick="nextSlide()">Tell Me 👀</button>
   </div>
 </div>
 
+<!-- SLIDE 4 -->
 <div class="slide">
   <div class="card">
     <h1>So… 💘</h1>
     <p>Will you be my Valentine?</p>
     <div class="btn-group">
       <button onclick="finale()">YES 💖</button>
-      <button onclick="finale()">ABSOLUTELY 😍</button>
+      <button onclick="finale()">NOT NO 😍</button>
     </div>
   </div>
 </div>
 
+<!-- SLIDE 5 -->
 <div class="slide">
   <div class="card">
     <h1>👑 QUEEN OF MY WORLD 👑</h1>
@@ -209,21 +251,28 @@ button:hover {
 <script>
 let current = 0;
 const slides = document.querySelectorAll('.slide');
-const music = document.getElementById('bgMusic');
 
+/* Slide navigation */
 function nextSlide() {
-  if (music.paused) music.play();
   slides[current].classList.remove('active');
   current++;
-  slides[current].classList.add('active');
+  if (current < slides.length) {
+    slides[current].classList.add('active');
+  }
 }
 
+/* Finale */
 function finale() {
   nextSlide();
-  confetti({ particleCount: 350, spread: 150, origin: { y: 0.6 } });
+  confetti({
+    particleCount: 350,
+    spread: 150,
+    origin: { y: 0.6 }
+  });
   for (let i = 0; i < 40; i++) createHeart();
 }
 
+/* Hearts */
 function createHeart() {
   const heart = document.createElement('div');
   heart.className = 'heart';
@@ -246,29 +295,34 @@ setInterval(() => {
   countdownEl.textContent = ${d}d ${h}h ${m}m until Valentine’s 💘;
 }, 1000);
 
-/* Swipe */
+/* Swipe support */
 let startY = 0;
 document.addEventListener('touchstart', e => startY = e.touches[0].clientY);
 document.addEventListener('touchend', e => {
-  if (startY - e.changedTouches[0].clientY > 50 && current < slides.length - 1)
+  if (startY - e.changedTouches[0].clientY > 50 && current < slides.length - 1) {
     nextSlide();
+  }
 });
 
-/* Theme */
+/* Theme toggle */
 function toggleTheme() {
   document.body.classList.toggle('rose');
 }
 
 /* Share */
 function share() {
-  navigator.share?.({
-    title: 'Valentine 💖',
-    text: 'Someone made this just for me 👑✨',
-    url: location.href
-  });
+  if (navigator.share) {
+    navigator.share({
+      title: 'Valentine 💖',
+      text: 'Someone made this just for me 👑✨',
+      url: location.href
+    });
+  } else {
+    alert('Copy the link and share the love 💕');
+  }
 }
 
-/* GOLD GLITTER TRAILS */
+/* Gold glitter trail */
 document.addEventListener('mousemove', sparkle);
 document.addEventListener('touchmove', e => sparkle(e.touches[0]));
 
