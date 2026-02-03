@@ -4,71 +4,34 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>For You 💖</title>
-
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-
 <style>
 * {margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
 :root { --bg1:#000; --bg2:#1a0010; --accent:#ff9fc7; }
 body.rose { --bg1:#2b0014; --bg2:#7a0036; --accent:#ffd1dc; }
 
-body {
-  height:100vh;
-  overflow:hidden;
-  background:radial-gradient(circle at top,var(--bg2),var(--bg1));
-  color:white;
-  transition:background 0.8s ease;
-}
+body { height:100vh; overflow:hidden; background:radial-gradient(circle at top,var(--bg2),var(--bg1)); color:white; transition:background 0.8s ease; }
 
-/* Slide container */
-.slide {
-  position:absolute; top:0; left:0; width:100%; height:100%;
-  display:flex; align-items:center; justify-content:center;
-  text-align:center; padding:30px;
-  opacity:0; transform:translateY(50px);
-  transition:all 0.7s cubic-bezier(0.25,1,0.5,1);
-  z-index:0;
-}
-
+.slide { position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; text-align:center; padding:30px; opacity:0; transform:translateY(50px); transition:all 0.7s cubic-bezier(0.25,1,0.5,1); z-index:0; }
 .slide.active { opacity:1; transform:translateY(0); z-index:2; }
 
-.card {
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(22px);
-  border-radius:34px;
-  padding:46px 36px;
-  max-width:430px; width:90%;
-  box-shadow:0 40px 100px rgba(255,180,120,0.25);
-}
+.card { background: rgba(255,255,255,0.08); backdrop-filter: blur(22px); border-radius:34px; padding:46px 36px; max-width:430px; width:90%; box-shadow:0 40px 100px rgba(255,180,120,0.25); }
 
-h1 {
-  font-size:2.3rem; margin-bottom:15px;
-  background:linear-gradient(45deg,#ffd700,#ff9fc7);
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-  animation: glow 2.5s ease-in-out infinite alternate;
-}
+h1 { font-size:2.3rem; margin-bottom:15px; background:linear-gradient(45deg,#ffd700,#ff9fc7); -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation: glow 2.5s ease-in-out infinite alternate; }
 @keyframes glow { 0%{text-shadow:0 0 8px #ffd700;}100%{text-shadow:0 0 24px #ff9fc7;} }
 
 p { font-size:1.15rem; opacity:0.9; margin-bottom:22px; }
 
-button {
-  background:linear-gradient(45deg,#ffd700,#ff4f9a);
-  border:none; color:white; padding:15px 36px;
-  border-radius:50px; font-size:1rem; cursor:pointer;
-  box-shadow:0 18px 45px rgba(255,215,0,0.45);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
+button { background:linear-gradient(45deg,#ffd700,#ff4f9a); border:none; color:white; padding:15px 36px; border-radius:50px; font-size:1rem; cursor:pointer; box-shadow:0 18px 45px rgba(255,215,0,0.45); transition: transform 0.2s ease, box-shadow 0.2s ease; }
 button:hover { transform:scale(1.08); box-shadow:0 20px 60px rgba(255,215,0,0.55); }
 
 .btn-group { display:flex; gap:15px; justify-content:center; flex-wrap:wrap; }
 .toggle { margin-top:15px; font-size:0.95rem; opacity:0.8; cursor:pointer; }
 .countdown { font-size:1.15rem; letter-spacing:1px; margin-bottom:25px; color:var(--accent); }
 
-/* Hearts */
 .heart { position:absolute; bottom:-40px; font-size:22px; animation:rise linear infinite; opacity:0.85; z-index:1; }
 @keyframes rise { 0%{transform:translateY(0) scale(1); opacity:0} 15%{opacity:1} 100%{transform:translateY(-120vh) scale(1.6); opacity:0} }
 
-/* Glitter */
 .glitter { position:fixed; width:10px; height:10px; background:radial-gradient(circle,#ffd700,rgba(255,215,0,0.05)); border-radius:50%; pointer-events:none; animation:sparkle 1.2s linear forwards; z-index:1; }
 @keyframes sparkle { 0%{transform:scale(1);opacity:1} 100%{transform:scale(0);opacity:0} }
 </style>
@@ -80,7 +43,7 @@ button:hover { transform:scale(1.08); box-shadow:0 20px 60px rgba(255,215,0,0.55
   <div class="card">
     <h1>MiMi 💖</h1>
     <p>A little something for the prettiest girl ✨</p>
-    <button onclick="nextSlide()">Begin 💫</button>
+    <button id="btn-begin">Begin 💫</button>
   </div>
 </div>
 
@@ -88,7 +51,7 @@ button:hover { transform:scale(1.08); box-shadow:0 20px 60px rgba(255,215,0,0.55
   <div class="card">
     <h1>Main Character Energy</h1>
     <p>You don’t try — you just shine 💎</p>
-    <button onclick="nextSlide()">Next 😌</button>
+    <button id="btn-next1">Next 😌</button>
   </div>
 </div>
 
@@ -96,7 +59,7 @@ button:hover { transform:scale(1.08); box-shadow:0 20px 60px rgba(255,215,0,0.55
   <div class="card">
     <h1>Countdown to Valentine’s 💕</h1>
     <div id="countdown" class="countdown"></div>
-    <button onclick="nextSlide()">Tell Me 👀</button>
+    <button id="btn-next2">Tell Me 👀</button>
   </div>
 </div>
 
@@ -105,8 +68,8 @@ button:hover { transform:scale(1.08); box-shadow:0 20px 60px rgba(255,215,0,0.55
     <h1>So… 💘</h1>
     <p>Will you be my Valentine?</p>
     <div class="btn-group">
-      <button onclick="finale()">YES 💖</button>
-      <button onclick="finale()">NOT NO 😈</button>
+      <button id="btn-yes">YES 💖</button>
+      <button id="btn-absolutely">ABSOLUTELY 😍</button>
     </div>
   </div>
 </div>
@@ -115,82 +78,86 @@ button:hover { transform:scale(1.08); box-shadow:0 20px 60px rgba(255,215,0,0.55
   <div class="card">
     <h1>👑 QUEEN OF MY WORLD 👑</h1>
     <p>You’re adored, celebrated, and chosen. Now and always.</p>
-    <button onclick="share()">Share This Moment 📲</button>
-    <div class="toggle" onclick="toggleTheme()">Switch Mood 🌙</div>
+    <button id="btn-share">Share This Moment 📲</button>
+    <div class="toggle" id="btn-toggle">Switch Mood 🌙</div>
   </div>
 </div>
 
 <script>
-let current=0;
-const slides=document.querySelectorAll('.slide');
+document.addEventListener("DOMContentLoaded", function(){
 
-/* Slide navigation */
-function nextSlide(){
-  slides[current].classList.remove('active');
-  current++;
-  if(current<slides.length){ slides[current].classList.add('active'); }
-}
+  let current=0;
+  const slides=document.querySelectorAll('.slide');
 
-/* Finale */
-function finale(){
-  nextSlide();
-  confetti({particleCount:400, spread:180, origin:{y:0.6}, colors:['#ffd700','#ff4f9a','#ffb6c1']});
-  for(let i=0;i<60;i++) createHeart();
-}
+  function nextSlide(){
+    slides[current].classList.remove('active');
+    current++;
+    if(current<slides.length){ slides[current].classList.add('active'); }
+  }
 
-/* Hearts */
-function createHeart(){
-  const heart=document.createElement('div');
-  heart.className='heart';
-  heart.innerHTML='💖';
-  heart.style.left=Math.random()*100+'vw';
-  heart.style.animationDuration=(Math.random()*3+3)+'s';
-  heart.style.fontSize=(18+Math.random()*14)+'px';
-  document.body.appendChild(heart);
-  setTimeout(()=>heart.remove(),6000);
-}
-setInterval(createHeart,800);
+  function finale(){
+    nextSlide();
+    confetti({particleCount:400, spread:180, origin:{y:0.6}, colors:['#ffd700','#ff4f9a','#ffb6c1']});
+    for(let i=0;i<60;i++) createHeart();
+  }
 
-/* Countdown */
-const countdownEl=document.getElementById('countdown');
-const valentines=new Date(new Date().getFullYear(),1,14).getTime();
-setInterval(()=>{
-  const diff=valentines-Date.now();
-  const d=Math.floor(diff/86400000);
-  const h=Math.floor((diff/3600000)%24);
-  const m=Math.floor((diff/60000)%60);
-  countdownEl.textContent = ${d}d ${h}h ${m}m until Valentines 💘;
-},1000);
+  function createHeart(){
+    const heart=document.createElement('div');
+    heart.className='heart';
+    heart.innerHTML='💖';
+    heart.style.left=Math.random()*100+'vw';
+    heart.style.animationDuration=(Math.random()*3+3)+'s';
+    heart.style.fontSize=(18+Math.random()*14)+'px';
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),6000);
+  }
+  setInterval(createHeart,800);
 
-/* Swipe support */
-let startY=0;
-document.addEventListener('touchstart',e=>startY=e.touches[0].clientY);
-document.addEventListener('touchend',e=>{
-  if(startY-e.changedTouches[0].clientY>50 && current<slides.length-1) nextSlide();
+  /* Countdown */
+  const countdownEl=document.getElementById('countdown');
+  const valentines=new Date(new Date().getFullYear(),1,14).getTime();
+  setInterval(()=>{
+    const diff=valentines-Date.now();
+    const d=Math.floor(diff/86400000);
+    const h=Math.floor((diff/3600000)%24);
+    const m=Math.floor((diff/60000)%60);
+    countdownEl.textContent = ${d}d ${h}h ${m}m until Valentine’s 💘;
+  },1000);
+
+  /* Buttons */
+  document.getElementById("btn-begin").addEventListener("click", nextSlide);
+  document.getElementById("btn-next1").addEventListener("click", nextSlide);
+  document.getElementById("btn-next2").addEventListener("click", nextSlide);
+  document.getElementById("btn-yes").addEventListener("click", finale);
+  document.getElementById("btn-absolutely").addEventListener("click", finale);
+  document.getElementById("btn-share").addEventListener("click", function(){
+    if(navigator.share){ navigator.share({title:'Valentine 💖', text:'Someone made this just for me 👑✨', url:location.href}); }
+    else{ alert('Copy the link and share the love 💕'); }
+  });
+  document.getElementById("btn-toggle").addEventListener("click", ()=>document.body.classList.toggle('rose'));
+
+  /* Swipe support */
+  let startY=0;
+  document.addEventListener('touchstart',e=>startY=e.touches[0].clientY);
+  document.addEventListener('touchend',e=>{
+    if(startY-e.changedTouches[0].clientY>50 && current<slides.length-1) nextSlide();
+  });
+
+  /* Glitter trail */
+  function sparkle(e){
+    const glitter=document.createElement('div');
+    glitter.className='glitter';
+    glitter.style.left=e.clientX+'px';
+    glitter.style.top=e.clientY+'px';
+    glitter.style.width=(5+Math.random()*10)+'px';
+    glitter.style.height=(5+Math.random()*10)+'px';
+    document.body.appendChild(glitter);
+    setTimeout(()=>glitter.remove(),1200);
+  }
+  document.addEventListener('mousemove',sparkle);
+  document.addEventListener('touchmove',e=>sparkle(e.touches[0]));
+
 });
-
-/* Theme toggle */
-function toggleTheme(){document.body.classList.toggle('rose');}
-
-/* Share button */
-function share(){
-  if(navigator.share){navigator.share({title:'Valentine 💖',text:'Someone made this just for me 👑✨',url:location.href});}
-  else{alert('Copy the link and share the love 💕');}
-}
-
-/* Glitter trail */
-document.addEventListener('mousemove',sparkle);
-document.addEventListener('touchmove',e=>sparkle(e.touches[0]));
-function sparkle(e){
-  const glitter=document.createElement('div');
-  glitter.className='glitter';
-  glitter.style.left=e.clientX+'px';
-  glitter.style.top=e.clientY+'px';
-  glitter.style.width=(5+Math.random()*10)+'px';
-  glitter.style.height=(5+Math.random()*10)+'px';
-  document.body.appendChild(glitter);
-  setTimeout(()=>glitter.remove(),1200);
-}
 </script>
 
 </body>
