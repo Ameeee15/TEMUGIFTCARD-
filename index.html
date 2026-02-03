@@ -88,112 +88,112 @@
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function(){
-      let current = 0;
-      const slides = document.querySelectorAll('.slide');
+    document.addEventListenerdocument.addEventListener("DOMContentLoaded", function(){
+  let current = 0;
+  const slides = document.querySelectorAll('.slide');
 
-      function showSlide(index){
-        if(index < 0 || index >= slides.length) return;
-        slides[current].classList.remove('active');
-        current = index;
-        slides[current].classList.add('active');
-      }
+  function showSlide(index){
+    if(index < 0 || index >= slides.length) return;
+    slides[current].classList.remove('active');
+    current = index;
+    slides[current].classList.add('active');
+  }
 
-      function nextSlide(){
-        if(current < slides.length - 1){
-          showSlide(current + 1);
-        }
-      }
+  function nextSlide(){
+    if(current < slides.length - 1){
+      showSlide(current + 1);
+    }
+  }
 
-      function finale(){
-        nextSlide();
-        confetti({
-          particleCount: 400,
-          spread: 180,
-          origin: { y: 0.6 },
-          colors: ['#ffd700','#ff4f9a','#ffb6c1']
-        });
-        for(let i = 0; i < 60; i++) createHeart();
-      }
-
-      function createHeart(){
-        const heart = document.createElement('div');
-        heart.className = 'heart';
-        heart.innerHTML = '💖';
-        heart.style.left = Math.random() * 100 + 'vw';
-        heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
-        heart.style.fontSize = (18 + Math.random() * 14) + 'px';
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 6000);
-      }
-
-      // Heart rain interval
-      setInterval(createHeart, 800);
-
-      // Countdown
-      const countdownEl = document.getElementById('countdown');
-      // Valentine date this year (assumes Feb 14)
-      const valentines = new Date(new Date().getFullYear(), 1, 14).getTime();
-
-      function updateCountdown(){
-        const now = Date.now();
-        const diff = valentines - now;
-        // If already past, show 0d 0h 0m
-        const d = Math.max(0, Math.floor(diff / 86400000));
-        const h = Math.max(0, Math.floor((diff / 3600000) % 24));
-        const m = Math.max(0, Math.floor((diff / 60000) % 60));
-        countdownEl.textContent = d + 'd ' + h + 'h ' + m + 'm until Valentine’s 💘';
-      }
-      updateCountdown();
-      setInterval(updateCountdown, 1000);
-
-      // Buttons
-      document.getElementById("btn-begin").addEventListener("click", nextSlide);
-      document.getElementById("btn-next1").addEventListener("click", nextSlide);
-      document.getElementById("btn-next2").addEventListener("click", nextSlide);
-
-      document.getElementById("btn-yes").addEventListener("click", finale);
-      document.getElementById("btn-absolutely").addEventListener("click", finale);
-
-      document.getElementById("btn-share").addEventListener("click", function(){
-        if(navigator.share){
-          navigator.share({
-            title: 'Valentine 💖',
-            text: 'Someone made this just for me 👑✨',
-            url: location.href
-          }).catch(() => { /* ignore */ });
-        } else {
-          navigator.clipboard?.writeText(location.href).catch(() => {});
-          alert('Link copied! Share the love 💕');
-        }
-      });
-
-      document.getElementById("btn-toggle").addEventListener("click", () => document.body.classList.toggle('rose'));
-
-      // Swipe support
-      let startY = 0;
-      document.addEventListener('touchstart', e => startY = e.touches<a href="" class="citation-link" target="_blank" style="vertical-align: super; font-size: 0.8em; margin-left: 3px;">[0]</a>.clientY);
-      document.addEventListener('touchend', e => {
-        const endY = e.changedTouches<a href="" class="citation-link" target="_blank" style="vertical-align: super; font-size: 0.8em; margin-left: 3px;">[0]</a>.clientY;
-        if(startY - endY > 50 && current < slides.length - 1){
-          nextSlide();
-        }
-      });
-
-      // Glitter trail on move
-      function sparkle(e){
-        const glitter = document.createElement('div');
-        glitter.className = 'glitter';
-        glitter.style.left = e.clientX + 'px';
-        glitter.style.top = e.clientY + 'px';
-        glitter.style.width = (5 + Math.random() * 10) + 'px';
-        glitter.style.height = (5 + Math.random() * 10) + 'px';
-        document.body.appendChild(glitter);
-        setTimeout(() => glitter.remove(), 1200);
-      }
-      document.addEventListener('mousemove', sparkle);
-      document.addEventListener('touchmove', e => sparkle(e.touches<a href="" class="citation-link" target="_blank" style="vertical-align: super; font-size: 0.8em; margin-left: 3px;">[0]</a>));
+  function finale(){
+    nextSlide();
+    confetti({
+      particleCount: 400,
+      spread: 180,
+      origin: { y: 0.6 },
+      colors: ['#ffd700','#ff4f9a','#ffb6c1']
     });
+    for(let i = 0; i < 60; i++) createHeart();
+  }
+
+  function createHeart(){
+    const heart = document.createElement('div');
+    heart.className = 'heart';
+    heart.innerHTML = '💖';
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+    heart.style.fontSize = (18 + Math.random() * 14) + 'px';
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 6000);
+  }
+
+  // Heart rain interval
+  setInterval(createHeart, 800);
+
+  // Countdown
+  const countdownEl = document.getElementById('countdown');
+  // Valentine date this year (assumes Feb 14)
+  const valentines = new Date(new Date().getFullYear(), 1, 14).getTime();
+
+  function updateCountdown(){
+    const now = Date.now();
+    const diff = valentines - now;
+    // If already past, show 0d 0h 0m
+    const d = Math.max(0, Math.floor(diff / 86400000));
+    const h = Math.max(0, Math.floor((diff / 3600000) % 24));
+    const m = Math.max(0, Math.floor((diff / 60000) % 60));
+    countdownEl.textContent = d + 'd ' + h + 'h ' + m + 'm until Valentine’s 💘';
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // Buttons
+  document.getElementById("btn-begin").addEventListener("click", nextSlide);
+  document.getElementById("btn-next1").addEventListener("click", nextSlide);
+  document.getElementById("btn-next2").addEventListener("click", nextSlide);
+
+  document.getElementById("btn-yes").addEventListener("click", finale);
+  document.getElementById("btn-absolutely").addEventListener("click", finale);
+
+  document.getElementById("btn-share").addEventListener("click", function(){
+    if(navigator.share){
+      navigator.share({
+        title: 'Valentine 💖',
+        text: 'Someone made this just for me 👑✨',
+        url: location.href
+      }).catch(() => { /* ignore */ });
+    } else {
+      navigator.clipboard?.writeText(location.href).catch(() => {});
+      alert('Link copied! Share the love 💕');
+    }
+  });
+
+  document.getElementById("btn-toggle").addEventListener("click", () => document.body.classList.toggle('rose'));
+
+  // Swipe support
+  let startY = 0;
+  document.addEventListener('touchstart', e => startY = e.touches[0].clientY);
+  document.addEventListener('touchend', e => {
+    const endY = e.changedTouches[0].clientY;
+    if(startY - endY > 50 && current < slides.length - 1){
+      nextSlide();
+    }
+  });
+
+  // Glitter trail on move
+  function sparkle(e){
+    const glitter = document.createElement('div');
+    glitter.className = 'glitter';
+    glitter.style.left = e.clientX + 'px';
+    glitter.style.top = e.clientY + 'px';
+    glitter.style.width = (5 + Math.random() * 10) + 'px';
+    glitter.style.height = (5 + Math.random() * 10) + 'px';
+    document.body.appendChild(glitter);
+    setTimeout(() => glitter.remove(), 1200);
+  }
+  document.addEventListener('mousemove', sparkle);
+  document.addEventListener('touchmove', e => sparkle(e.touches[0]));
+});
   </script>
 </body>
 </html>
