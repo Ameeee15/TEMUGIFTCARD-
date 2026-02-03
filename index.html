@@ -1,16 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>For You 💖</title>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-:root{--bg1:#000;--bg2:#1a0010;--accent:#ff9fc7;}
-body.rose{--bg1:#2b0014;--bg2:#7a0036;--accent:#ffd1dc;}
+/* ========== RESET & THEME ========== */
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+
+:root{
+  --bg1:#000;
+  --bg2:#1a0010;
+  --accent:#ff9fc7;
+}
+
 body{
   height:100vh;
   overflow:hidden;
@@ -18,7 +24,22 @@ body{
   color:white;
 }
 
-/* Slides */
+/* ========== LAYERS ========== */
+#fx{
+  position:fixed;
+  inset:0;
+  pointer-events:none; /* 🔒 ABSOLUTE GUARANTEE */
+  overflow:hidden;
+  z-index:1;
+}
+
+#ui{
+  position:relative;
+  z-index:10;
+  height:100%;
+}
+
+/* ========== SLIDES ========== */
 .slide{
   position:absolute;
   inset:0;
@@ -28,7 +49,8 @@ body{
   text-align:center;
   padding:30px;
 }
-.slide.active{display:flex;}
+
+.slide.active{ display:flex; }
 
 .card{
   background:rgba(255,255,255,0.08);
@@ -48,8 +70,9 @@ h1{
   -webkit-text-fill-color:transparent;
 }
 
-p{font-size:1.15rem;opacity:0.9;margin-bottom:22px;}
+p{ font-size:1.15rem; opacity:0.9; margin-bottom:22px; }
 
+/* ========== BUTTONS ========== */
 button{
   background:linear-gradient(45deg,#ffd700,#ff4f9a);
   border:none;
@@ -60,51 +83,186 @@ button{
   cursor:pointer;
 }
 
-/* Hearts */
+.btn-group{
+  display:flex;
+  gap:15px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+.countdown{
+  font-size:1.15rem;
+  margin-bottom:25px;
+  color:var(--accent);
+}
+
+/* ========== FX ELEMENTS ========== */
 .heart{
   position:absolute;
   bottom:-40px;
   font-size:22px;
-  animation:rise linear infinite;
+  animation:rise linear forwards;
   opacity:0.85;
-  z-index:1;
-  pointer-events:none; /* ✅ FIX */
 }
 
 @keyframes rise{
-  0%{transform:translateY(0);opacity:0}
-  15%{opacity:1}
-  100%{transform:translateY(-120vh);opacity:0;}
+  0%{ transform:translateY(0); opacity:0 }
+  15%{ opacity:1 }
+  100%{ transform:translateY(-120vh); opacity:0 }
 }
 
-/* Glitter */
 .glitter{
-  position:fixed;
+  position:absolute;
   border-radius:50%;
-  pointer-events:none; /* ✅ FIX */
   background:radial-gradient(circle,#ffd700,rgba(255,215,0,0.05));
   animation:sparkle 1.2s linear forwards;
-  z-index:1;
 }
 
 @keyframes sparkle{
-  0%{transform:scale(1);opacity:1}
-  100%{transform:scale(0);opacity:0}
+  from{ transform:scale(1); opacity:1 }
+  to{ transform:scale(0); opacity:0 }
 }
 </style>
 </head>
 
 <body>
 
-<div class="slide active">
-  <div class="card">
-    <h1>MiMi 💖</h1>
-    <p>A little something for the prettiest girl ✨</p>
-    <button id="btn-begin">Begin 💫</button>
+<!-- FX LAYER -->
+<div id="fx"></div>
+
+<!-- UI LAYER -->
+<div id="ui">
+
+  <div class="slide active">
+    <div class="card">
+      <h1>MiMi 💖</h1>
+      <p>A little something for the prettiest girl ✨</p>
+      <button data-next>Begin 💫</button>
+    </div>
   </div>
+
+  <div class="slide">
+    <div class="card">
+      <h1>Main Character Energy</h1>
+      <p>You don’t try — you just shine 💎</p>
+      <button data-next>Next 😌</button>
+    </div>
+  </div>
+
+  <div class="slide">
+    <div class="card">
+      <h1>Countdown to Valentine’s 💕</h1>
+      <div id="countdown" class="countdown"></div>
+      <button data-next>Tell Me 👀</button>
+    </div>
+  </div>
+
+  <div class="slide">
+    <div class="card">
+      <h1>So… 💘</h1>
+      <p>Will you be my Valentine?</p>
+      <div class="btn-group">
+        <button data-finale>YES 💖</button>
+        <button data-finale>NOT NO 😈</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide">
+    <div class="card">
+      <h1>👑 QUEEN OF MY WORLD 👑</h1>
+      <p>You’re adored, celebrated, and chosen.</p>
+    </div>
+  </div>
+
 </div>
 
-<div class="slide">
-  <div class="card">
-    <h1>Main Character Energy</h1>
-    <p>You do
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  /* ===== SLIDE CONTROLLER ===== */
+  const slides = [...document.querySelectorAll(".slide")];
+  let index = 0;
+
+  function show(i){
+    slides.forEach(s => s.classList.remove("active"));
+    slides[i]?.classList.add("active");
+  }
+
+  function next(){
+    if(index < slides.length - 1){
+      index++;
+      show(index);
+    }
+  }
+
+  /* ===== BUTTON WIRING ===== */
+  document.querySelectorAll("[data-next]").forEach(btn =>
+    btn.addEventListener("click", next)
+  );
+
+  document.querySelectorAll("[data-finale]").forEach(btn =>
+    btn.addEventListener("click", finale)
+  );
+
+  /* ===== FX SYSTEM ===== */
+  const fx = document.getElementById("fx");
+
+  function heart(){
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.textContent = "💖";
+    h.style.left = Math.random()*100 + "vw";
+    h.style.fontSize = 18 + Math.random()*14 + "px";
+    h.style.animationDuration = 3 + Math.random()*3 + "s";
+    fx.appendChild(h);
+    setTimeout(()=>h.remove(),6000);
+  }
+
+  setInterval(heart, 900);
+
+  function sparkle(x,y){
+    const g = document.createElement("div");
+    g.className = "glitter";
+    g.style.left = x + "px";
+    g.style.top = y + "px";
+    g.style.width = g.style.height = 6 + Math.random()*8 + "px";
+    fx.appendChild(g);
+    setTimeout(()=>g.remove(),1200);
+  }
+
+  document.addEventListener("mousemove", e => sparkle(e.clientX, e.clientY));
+  document.addEventListener("touchmove", e =>
+    sparkle(e.touches[0].clientX, e.touches[0].clientY)
+  );
+
+  /* ===== FINALE ===== */
+  function finale(){
+    next();
+    confetti({
+      particleCount:350,
+      spread:180,
+      origin:{y:0.6},
+      colors:["#ffd700","#ff4f9a","#ffb6c1"]
+    });
+    for(let i=0;i<50;i++) heart();
+  }
+
+  /* ===== COUNTDOWN ===== */
+  const cd = document.getElementById("countdown");
+  if(cd){
+    const target = new Date(new Date().getFullYear(),1,14).getTime();
+    setInterval(()=>{
+      const diff = Math.max(0, target - Date.now());
+      const d = Math.floor(diff/86400000);
+      const h = Math.floor(diff/3600000)%24;
+      const m = Math.floor(diff/60000)%60;
+      cd.textContent = `${d}d ${h}h ${m}m until Valentine’s 💘`;
+    },1000);
+  }
+
+});
+</script>
+
+</body>
+</html>
