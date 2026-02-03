@@ -162,6 +162,116 @@ audio{display:none}
       And I hope you never forget how special you are to me.
     </p>
     <h1>💍 Be mine. Always.</h1>
-    <img src="https://media.giphy.com/media/l0MYt5jPR6QX
+    <img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" width="260">
+  </div>
+</main>
+
+<script>
+const zone=document.getElementById("zone");
+const yes=document.getElementById("yes");
+const no=document.getElementById("no");
+const hint=document.getElementById("hint");
+const fake=document.getElementById("fake");
+const result=document.getElementById("result");
+const canvas=document.getElementById("confetti");
+const music=document.getElementById("music");
+
+const sass=[
+  "Be honest… you’re smiling 😏",
+  "MiMi… don’t embarrass yourself.",
+  "This is not a real option.",
+  "Universe rejected your request ❌",
+  "Why are you running 😭",
+  "Just press YES already 💀"
+];
+
+let count=0;
+let yesScale=1;
+
+/* CONFETTI */
+function resize(){
+  const dpr=window.devicePixelRatio||1;
+  canvas.width=innerWidth*dpr;
+  canvas.height=innerHeight*dpr;
+  canvas.style.width="100vw";
+  canvas.style.height="100vh";
+}
+resize();
+addEventListener("resize",resize);
+
+const confettiInstance=confetti.create(canvas,{resize:false,useWorker:true});
+
+/* NO ESCAPE */
+function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
+
+function dodge(px,py){
+  const z=zone.getBoundingClientRect();
+  const b=no.getBoundingClientRect();
+  let dx=(b.left+b.width/2)-px;
+  let dy=(b.top+b.height/2)-py;
+  let mag=Math.hypot(dx,dy)||1;
+  dx/=mag; dy/=mag;
+
+  no.style.left=clamp((b.left-z.left)+dx*160,0,z.width-b.width)+"px";
+  no.style.top=clamp((b.top-z.top)+dy*160,0,z.height-b.height)+"px";
+  no.style.transform="none";
+
+  yesScale=Math.min(2.8,yesScale+.12);
+  yes.style.transform=`translateY(-50%) scale(${yesScale})`;
+
+  hint.textContent=sass[count%sass.length];
+  fake.textContent="System message: rejecting NO ("+(count+1)+")";
+  count++;
+}
+
+zone.addEventListener("pointermove",e=>{
+  const b=no.getBoundingClientRect();
+  if(Math.hypot(
+    (b.left+b.width/2)-e.clientX,
+    (b.top+b.height/2)-e.clientY
+  )<160) dodge(e.clientX,e.clientY);
+});
+
+no.addEventListener("click",e=>e.preventDefault());
+
+/* YES */
+yes.addEventListener("click",()=>{
+  music.play().catch(()=>{});
+  zone.style.display="none";
+  hint.style.display="none";
+  fake.style.display="none";
+  result.style.display="block";
+
+  const end=Date.now()+1800;
+  (function frame(){
+    confettiInstance({
+      particleCount:14,
+      spread:100,
+      startVelocity:45,
+      origin:{x:Math.random(),y:Math.random()*0.4}
+    });
+    if(Date.now()<end)requestAnimationFrame(frame);
+  })();
+
+  setTimeout(()=>{
+    confettiInstance({
+      particleCount:350,
+      spread:150,
+      startVelocity:65,
+      origin:{x:.5,y:.6}
+    });
+  },400);
+});
+
+/* SECRET WAIT */
+setTimeout(()=>{
+  if(result.style.display!=="block"){
+    hint.textContent="Destiny is getting impatient 😌";
+  }
+},12000);
+</script>
+</body>
+</html>
+
 
 
