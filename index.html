@@ -3,16 +3,15 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>MiMi 💖 Important Question</title>
+<title>MiMi 💖 A Very Serious Question</title>
 
-<!-- Confetti -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
 <style>
 :root{
   --pink1:#ffd1e8;
   --pink2:#fff0f7;
-  --card:#ffffffdd;
+  --card:#ffffffee;
   --yes:#ff2f7b;
   --yesHover:#ff145f;
 }
@@ -39,29 +38,29 @@ canvas{
 
 .card{
   width:min(720px,96vw);
-  padding:28px 22px 32px;
+  padding:30px 22px 34px;
   background:var(--card);
   backdrop-filter:blur(12px);
-  border-radius:26px;
+  border-radius:28px;
   text-align:center;
-  box-shadow:0 30px 80px rgba(0,0,0,.18);
+  box-shadow:0 30px 90px rgba(0,0,0,.2);
 }
 
 h1{
   font-size:clamp(26px,4.5vw,48px);
-  margin:8px 0;
+  margin:10px 0;
 }
 
 p{
   font-size:16px;
-  opacity:.8;
-  margin-bottom:22px;
+  opacity:.82;
+  margin-bottom:20px;
 }
 
 .zone{
   position:relative;
   width:min(520px,100%);
-  height:170px;
+  height:180px;
   margin:0 auto;
   touch-action:none;
 }
@@ -72,18 +71,18 @@ button{
   transform:translateY(-50%);
   padding:16px 28px;
   font-size:18px;
-  font-weight:800;
+  font-weight:900;
   border-radius:999px;
   border:none;
   cursor:pointer;
   box-shadow:0 14px 30px rgba(0,0,0,.18);
   user-select:none;
   -webkit-tap-highlight-color:transparent;
-  transition:transform .12s ease,background .12s ease;
+  transition:transform .15s ease,background .15s ease;
 }
 
 #yes{
-  left:18%;
+  left:16%;
   background:var(--yes);
   color:#fff;
 }
@@ -91,26 +90,32 @@ button{
 #yes:hover{background:var(--yesHover)}
 
 #no{
-  left:62%;
+  left:64%;
   background:#e5e7eb;
   color:#111;
 }
 
 .hint{
-  margin-top:12px;
+  margin-top:14px;
+  font-size:14px;
+  min-height:22px;
+  opacity:.7;
+}
+
+.fake{
   font-size:13px;
-  opacity:.65;
-  min-height:18px;
+  opacity:.6;
+  margin-top:8px;
 }
 
 .result{
   display:none;
-  margin-top:22px;
-  animation:pop .45s ease;
+  margin-top:26px;
+  animation:pop .5s ease;
 }
 
 @keyframes pop{
-  from{transform:scale(.92);opacity:0}
+  from{transform:scale(.9);opacity:0}
   to{transform:scale(1);opacity:1}
 }
 
@@ -122,18 +127,18 @@ audio{display:none}
 <canvas id="confetti"></canvas>
 
 <audio id="music" loop>
-  <source src="https://assets.mixkit.co/music/preview/mixkit-romantic-piano-loop-779.mp3" type="audio/mpeg">
+  <source src="https://assets.mixkit.co/music/preview/mixkit-romantic-piano-loop-779.mp3">
 </audio>
 
-<main class="card">
-  <h1>MiMi… 🥹💖</h1>
-  <p>
-    After deep thinking, emotional damage,
-    and consulting the universe 🌌  
-    I have exactly ONE question:
+<main class="card" id="card">
+  <h1 id="title">MiMi… 🥹💖</h1>
+  <p id="subtitle">
+    This page has one purpose.  
+    One question.  
+    One correct answer.
   </p>
 
-  <h1>Will you be my Valentine?</h1>
+  <h1 id="question">Will you be my Valentine?</h1>
 
   <div class="zone" id="zone">
     <button id="yes">YES 💘</button>
@@ -141,129 +146,22 @@ audio{display:none}
   </div>
 
   <div class="hint" id="hint">
-    ⚠️ The “No” button has commitment issues.
+    ⚠️ “No” may cause emotional consequences.
   </div>
+  <div class="fake" id="fake"></div>
 
   <div class="result" id="result">
-    <h1>IT WAS ALWAYS YOU 😭❤️</h1>
+    <h1>OKAY OKAY 😭❤️</h1>
     <p>
-      Congratulations MiMi 🎉  
-      You’ve officially locked in:
-      unlimited hugs, snacks,
-      chaos, laughter & love.
+      You win. Or actually…  
+      **WE** win.
+    </p>
+    <p>
+      MiMi, this wasn’t just a page.  
+      It’s a memory.  
+      And I hope you never forget how special you are to me.
     </p>
     <h1>💍 Be mine. Always.</h1>
-    <img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" width="260" alt="celebration">
-  </div>
-</main>
+    <img src="https://media.giphy.com/media/l0MYt5jPR6QX
 
-<script>
-const zone=document.getElementById("zone");
-const yes=document.getElementById("yes");
-const no=document.getElementById("no");
-const result=document.getElementById("result");
-const hint=document.getElementById("hint");
-const canvas=document.getElementById("confetti");
-const music=document.getElementById("music");
-
-const noMessages=[
-  "Nice try 😏",
-  "MiMi… be serious.",
-  "That button is broken 💀",
-  "Emotionally unavailable ❌",
-  "Universe said NO to No 🌌",
-  "Why are you like this 😭"
-];
-
-let noCount=0;
-let yesScale=1;
-
-/* CONFETTI */
-function resizeCanvas(){
-  const dpr=window.devicePixelRatio||1;
-  canvas.width=innerWidth*dpr;
-  canvas.height=innerHeight*dpr;
-  canvas.style.width="100vw";
-  canvas.style.height="100vh";
-}
-resizeCanvas();
-addEventListener("resize",resizeCanvas);
-
-const confettiInstance=confetti.create(canvas,{resize:false,useWorker:true});
-
-function celebrate(){
-  const end=Date.now()+1600;
-  (function frame(){
-    confettiInstance({
-      particleCount:10,
-      spread:90,
-      startVelocity:40,
-      origin:{x:Math.random(),y:Math.random()*0.4}
-    });
-    if(Date.now()<end)requestAnimationFrame(frame);
-  })();
-
-  setTimeout(()=>{
-    confettiInstance({
-      particleCount:300,
-      spread:140,
-      startVelocity:60,
-      origin:{x:0.5,y:0.6}
-    });
-  },300);
-}
-
-/* NO BUTTON DODGE */
-function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
-
-function dodge(px,py){
-  const z=zone.getBoundingClientRect();
-  const b=no.getBoundingClientRect();
-
-  let dx=(b.left+b.width/2)-px;
-  let dy=(b.top+b.height/2)-py;
-  let mag=Math.hypot(dx,dy)||1;
-  dx/=mag; dy/=mag;
-
-  no.style.left=clamp((b.left-z.left)+dx*150,0,z.width-b.width)+"px";
-  no.style.top=clamp((b.top-z.top)+dy*150,0,z.height-b.height)+"px";
-  no.style.transform="none";
-
-  yesScale=Math.min(2.6,yesScale+.1);
-  yes.style.transform=`translateY(-50%) scale(${yesScale})`;
-
-  hint.textContent=noMessages[noCount%noMessages.length];
-  noCount++;
-}
-
-zone.addEventListener("pointermove",e=>{
-  const b=no.getBoundingClientRect();
-  const d=Math.hypot(
-    (b.left+b.width/2)-e.clientX,
-    (b.top+b.height/2)-e.clientY
-  );
-  if(d<150)dodge(e.clientX,e.clientY);
-});
-
-no.addEventListener("click",e=>e.preventDefault());
-
-/* YES CLICK */
-yes.addEventListener("click",()=>{
-  music.play().catch(()=>{});
-  zone.style.display="none";
-  hint.style.display="none";
-  result.style.display="block";
-  celebrate();
-});
-
-/* SECRET ENDING – WAIT 10s */
-setTimeout(()=>{
-  if(result.style.display!=="block"){
-    hint.textContent="If you wait long enough… destiny decides 😌";
-  }
-},10000);
-</script>
-</body>
-</html>
->
 
