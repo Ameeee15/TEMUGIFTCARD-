@@ -7,7 +7,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
@@ -27,18 +27,17 @@ body{
   overflow:hidden;
 }
 
-/* CONFETTI CANVAS — OFF BY DEFAULT */
+/* CONFETTI MUST BE IN FRONT */
 #confetti{
   position:fixed;
   inset:0;
   pointer-events:none;
-  z-index:1;
-  display:none;
+  z-index:9999;
 }
 
 .card{
   width:min(720px,94vw);
-  padding:32px 26px;
+  padding:32px 26px 36px;
   background:#ffffffee;
   border-radius:28px;
   text-align:center;
@@ -46,8 +45,8 @@ body{
   z-index:2;
 }
 
-h1{font-weight:800}
-p{opacity:.85}
+h1{font-weight:800;margin:10px 0}
+p{opacity:.85;margin-bottom:20px}
 
 .zone{height:180px}
 
@@ -62,26 +61,36 @@ button{
 }
 
 #yes{background:#ff2f7b;color:#fff}
+
 #no{
   background:#e5e7eb;
   position:fixed;
   z-index:5;
 }
 
-.hint{margin-top:14px;min-height:26px}
-.fake{font-size:13px;opacity:.6}
+.hint{margin-top:14px;min-height:24px}
+.fake{font-size:13px;opacity:.65;min-height:18px}
 
-.result{display:none;margin-top:26px}
+.result{
+  display:none;
+  margin-top:26px;
+  animation:pop .5s ease;
+}
+
+@keyframes pop{
+  from{transform:scale(.95);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
 
 .freeze{
   position:fixed;
   inset:0;
-  background:#fff;
+  background:rgba(255,255,255,.96);
   display:grid;
   place-items:center;
   font-size:clamp(28px,5vw,52px);
   font-weight:900;
-  z-index:9999;
+  z-index:9998;
 }
 
 audio{display:none}
@@ -110,9 +119,11 @@ audio{display:none}
   <div class="fake" id="fake"></div>
 
   <div class="result" id="result">
-    <h1>There it is ❤️</h1>
-    <p>No jokes now.<br>Just me choosing you.</p>
-    <h1>💍 Always.</h1>
+    <h1>OKAY OKAY 😭❤️</h1>
+    <p>You win. Or actually…<br><strong>WE</strong> win.</p>
+    <p>MiMi, this wasn’t just a page.<br>It’s a memory.</p>
+    <h1>💍 Be mine. Always.</h1>
+    <img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" width="260">
   </div>
 </div>
 
@@ -124,13 +135,15 @@ const no = document.getElementById("no");
 const hint = document.getElementById("hint");
 const fake = document.getElementById("fake");
 const result = document.getElementById("result");
-const confettiCanvas = document.getElementById("confetti");
+const canvas = document.getElementById("confetti");
 const music = document.getElementById("music");
 
+/* NO BUTTON CHAOS */
 const jokes=[
   "Nice try 😌","That’s adorable, but no.","You really thought?",
-  "MiMi… behave 😏","You’re smiling.","Wrong button.",
-  "Drama detected.","You enjoy chaos.","Still no.","Give up 😌"
+  "MiMi… behave 😏","You’re smiling right now.",
+  "Wrong button.","Drama detected.",
+  "You enjoy this.","Still no.","Give up 😌"
 ];
 const reactions=[
   "Universe says nope",
@@ -142,7 +155,6 @@ const reactions=[
 
 let j=0,r=0;
 
-/* NO BUTTON RUNS EVERYWHERE */
 function moveNo(){
   no.style.left=Math.random()*(innerWidth-120)+"px";
   no.style.top=Math.random()*(innerHeight-60)+"px";
@@ -153,27 +165,27 @@ function moveNo(){
 no.addEventListener("mouseenter",moveNo);
 no.addEventListener("click",e=>e.preventDefault());
 
-/* CONFETTI — CREATED BUT NOT RUNNING */
-const confettiInstance = confetti.create(confettiCanvas,{resize:true,useWorker:true});
-let rainActive=false;
+/* CONFETTI SETUP */
+const confettiInstance = confetti.create(canvas,{resize:true,useWorker:true});
+const heart = confetti.shapeFromText({ text: "💖", scalar: 2 });
 
-function startConfettiRain(){
-  if(rainActive) return;
-  rainActive=true;
-  confettiCanvas.style.display="block";
+let raining=false;
+function startRain(){
+  if(raining) return;
+  raining=true;
 
   (function rain(){
     confettiInstance({
       particleCount:35,
       spread:140,
       startVelocity:0,
-      gravity:0.75,
+      gravity:0.8,
       ticks:600,
-      scalar:1.6,
-      shapes:["square","circle"],
+      scalar:1.4,
+      shapes:["square","circle",heart],
       origin:{x:Math.random(),y:-0.1}
     });
-    if(rainActive) setTimeout(rain,120);
+    if(raining) setTimeout(rain,120);
   })();
 }
 
@@ -181,22 +193,28 @@ function startConfettiRain(){
 yes.addEventListener("click",()=>{
   music.play().catch(()=>{});
 
+  // REMOVE NO BUTTON COMPLETELY
+  no.remove();
+
   const freeze=document.createElement("div");
   freeze.className="freeze";
   freeze.innerHTML="MiMi 💖<br>This moment is yours now.";
   document.body.appendChild(freeze);
 
+  // MASSIVE BLAST
+  confettiInstance({
+    particleCount:700,
+    spread:180,
+    startVelocity:80,
+    scalar:1.6,
+    shapes:["square","circle",heart]
+  });
+
   setTimeout(()=>{
     freeze.remove();
     result.style.display="block";
-    startConfettiRain();
-
-    confettiInstance({
-      particleCount:600,
-      spread:180,
-      startVelocity:80
-    });
-  },1600);
+    startRain();
+  },1700);
 });
 </script>
 </body>
