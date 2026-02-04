@@ -1,296 +1,275 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Will You Be My Princess? ✨👑💕</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;700&family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      background: linear-gradient(135deg, #fff0f5 0%, #f8e1e9 40%, #f5e0ff 100%);
-      font-family: 'Playfair Display', serif;
-      color: #2d1b24;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>MiMi 💖 A Very Serious Question</title>
 
-    .overlay {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background: radial-gradient(circle at 50% 30%, rgba(255, 245, 200, 0.25) 0%, transparent 60%);
-      z-index: 1;
-    }
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
-    .container {
-      position: relative;
-      z-index: 10;
-      text-align: center;
-      padding: 60px 70px;
-      background: rgba(255, 255, 255, 0.78);
-      border-radius: 42px;
-      box-shadow: 0 20px 80px rgba(180, 120, 160, 0.25),
-                  inset 0 0 60px rgba(255, 245, 220, 0.4);
-      backdrop-filter: blur(12px);
-      border: 2px solid rgba(255, 220, 180, 0.5);
-      max-width: 720px;
-    }
+<style>
+:root{
+  --pink1:#ffd1e8;
+  --pink2:#fff0f7;
+  --card:#ffffffee;
+  --yes:#ff2f7b;
+  --yesHover:#ff145f;
+}
 
-    h1 {
-      font-family: 'Great Vibes', cursive;
-      font-size: 7.2rem;
-      margin: 0 0 20px;
-      color: #b5838d;
-      text-shadow: 0 0 40px rgba(255, 215, 180, 0.7),
-                   4px 4px 20px rgba(139, 69, 19, 0.15);
-      letter-spacing: 4px;
-    }
+*{box-sizing:border-box}
 
-    .subtitle {
-      font-family: 'Cinzel Decorative', cursive;
-      font-size: 2.8rem;
-      color: #8d5524;
-      margin-bottom: 50px;
-      letter-spacing: 3px;
-      text-shadow: 0 2px 10px rgba(255, 245, 200, 0.6);
-    }
+body{
+  margin:0;
+  min-height:100svh;
+  display:grid;
+  place-items:center;
+  background:radial-gradient(circle at top,var(--pink2),var(--pink1));
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+  overflow:hidden;
+  padding:14px;
+}
 
-    .question {
-      font-size: 2.6rem;
-      margin: 40px 0 60px;
-      color: #5d4037;
-      font-weight: 600;
-      min-height: 100px;
-    }
+canvas{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:999;
+}
 
-    .buttons {
-      display: flex;
-      justify-content: center;
-      gap: 120px;
-      flex-wrap: wrap;
-    }
+.card{
+  width:min(720px,96vw);
+  padding:30px 22px 34px;
+  background:var(--card);
+  backdrop-filter:blur(12px);
+  border-radius:28px;
+  text-align:center;
+  box-shadow:0 30px 90px rgba(0,0,0,.2);
+}
 
-    button {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.1rem;
-      padding: 18px 70px;
-      border: none;
-      border-radius: 999px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.4s ease;
-      letter-spacing: 1px;
-      box-shadow: 0 10px 30px rgba(139, 69, 19, 0.18);
-    }
+h1{
+  font-size:clamp(26px,4.5vw,48px);
+  margin:10px 0;
+}
 
-    #yes {
-      background: linear-gradient(135deg, #ffd700, #f4c430, #ffdb58);
-      color: #4a2c0d;
-      border: 2px solid #d4af37;
-    }
+p{
+  font-size:16px;
+  opacity:.82;
+  margin-bottom:20px;
+}
 
-    #yes:hover {
-      transform: scale(1.15) translateY(-6px);
-      box-shadow: 0 20px 60px rgba(255, 215, 0, 0.45);
-      background: linear-gradient(135deg, #ffeb3b, #ffd54f, #ffee58);
-    }
+.zone{
+  position:relative;
+  width:min(520px,100%);
+  height:180px;
+  margin:0 auto;
+  touch-action:none;
+}
 
-    #no {
-      background: linear-gradient(135deg, #e0c3fc, #c3b1e1);
-      color: #4a2c0d;
-      border: 2px solid #b19cd9;
-    }
+button{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  padding:16px 28px;
+  font-size:18px;
+  font-weight:900;
+  border-radius:999px;
+  border:none;
+  cursor:pointer;
+  box-shadow:0 14px 30px rgba(0,0,0,.18);
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .15s ease,background .15s ease;
+}
 
-    #no:hover {
-      transform: translateY(-4px) scale(1.08);
-      box-shadow: 0 15px 40px rgba(200, 180, 240, 0.4);
-    }
+#yes{
+  left:16%;
+  background:var(--yes);
+  color:#fff;
+}
 
-    .glitter {
-      position: absolute;
-      pointer-events: none;
-      width: 8px;
-      height: 8px;
-      background: white;
-      border-radius: 50%;
-      box-shadow: 0 0 12px white, 0 0 24px #fff9c4;
-      opacity: 0;
-      animation: sparkle linear infinite;
-    }
+#yes:hover{background:var(--yesHover)}
 
-    @keyframes sparkle {
-      0%   { opacity: 0; transform: scale(0.2) translateY(0); }
-      20%  { opacity: 0.9; transform: scale(1.1); }
-      50%  { opacity: 0.7; transform: scale(0.9) translateY(-20vh); }
-      100% { opacity: 0; transform: scale(0.3) translateY(-60vh); }
-    }
+#no{
+  left:64%;
+  background:#e5e7eb;
+  color:#111;
+}
 
-    .princess-heart {
-      position: absolute;
-      font-size: 2.8rem;
-      opacity: 0.7;
-      pointer-events: none;
-      animation: floatHeart 14s linear infinite;
-    }
+.hint{
+  margin-top:14px;
+  font-size:14px;
+  min-height:22px;
+  opacity:.7;
+}
 
-    @keyframes floatHeart {
-      0%   { transform: translateY(120vh) rotate(0deg); opacity: 0.3; }
-      30%  { opacity: 0.9; }
-      100% { transform: translateY(-30vh) rotate(720deg); opacity: 0; }
-    }
+.fake{
+  font-size:13px;
+  opacity:.6;
+  margin-top:8px;
+}
 
-    .crown {
-      font-size: 3.8rem;
-      margin-left: 12px;
-      display: inline-block;
-      animation: gentleCrown 6s ease-in-out infinite;
-    }
+.result{
+  display:none;
+  margin-top:26px;
+  animation:pop .5s ease;
+}
 
-    @keyframes gentleCrown {
-      0%,100% { transform: rotate(-6deg) translateY(0); }
-      50%     { transform: rotate(6deg) translateY(-8px); }
-    }
+@keyframes pop{
+  from{transform:scale(.9);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
 
-    .hidden { display: none; }
-  </style>
+audio{display:none}
+</style>
 </head>
+
 <body>
+<canvas id="confetti"></canvas>
 
-  <div class="overlay"></div>
+<audio id="music" loop>
+  <source src="https://assets.mixkit.co/music/preview/mixkit-romantic-piano-loop-779.mp3">
+</audio>
 
-  <div class="container">
-    <h1>Will You Be<br>My Valentine? <span class="crown">👑</span></h1>
+<main class="card" id="card">
+  <h1 id="title">MiMi… 🥹💖</h1>
+  <p id="subtitle">
+    This page has one purpose.  
+    One question.  
+    One correct answer.
+  </p>
 
-    <div class="subtitle">My dearest princess… ✨</div>
+  <h1 id="question">Will you be my Valentine?</h1>
 
-    <div class="question" id="question">May I have this honor? 💕</div>
-
-    <div class="buttons">
-      <button id="yes">Yes, my love 💞</button>
-      <button id="no">Not today…</button>
-    </div>
-
-    <div id="happy" class="hidden">
-      <div style="font-size: 5.5rem; color: #b5838d; margin: 50px 0; font-family: 'Great Vibes', cursive;">
-        My heart is yours forever ✨👑💖
-      </div>
-      <div style="font-size: 2.4rem; color: #5d4037; margin: 30px 0;">
-        You’ve made me the happiest soul in every kingdom
-      </div>
-    </div>
-
-    <div id="sad" class="hidden">
-      <div style="font-size: 4.2rem; color: #8d5524; margin: 50px 0; font-family: 'Great Vibes', cursive;">
-        I shall wait patiently… 🥀
-      </div>
-      <div style="font-size: 2rem; color: #5d4037;">
-        My crown feels a little heavier tonight
-      </div>
-    </div>
+  <div class="zone" id="zone">
+    <button id="yes">YES 💘</button>
+    <button id="no">No 🙄</button>
   </div>
 
-  <script>
-    const yesBtn = document.getElementById('yes');
-    const noBtn = document.getElementById('no');
-    const question = document.getElementById('question');
-    const happy = document.getElementById('happy');
-    const sad = document.getElementById('sad');
+  <div class="hint" id="hint">
+    ⚠️ “No” may cause emotional consequences.
+  </div>
+  <div class="fake" id="fake"></div>
 
-    // YES → royal celebration
-    yesBtn.addEventListener('click', () => {
-      question.classList.add('hidden');
-      noBtn.classList.add('hidden');
-      yesBtn.style.display = 'none';
-      happy.classList.remove('hidden');
-      createGlitterBurst(80);
-      createHeartRain(40);
+  <div class="result" id="result">
+    <h1>OKAY OKAY 😭❤️</h1>
+    <p>
+      You win. Or actually…  
+      **WE** win.
+    </p>
+    <p>
+      MiMi, this wasn’t just a page.  
+      It’s a memory.  
+      And I hope you never forget how special you are to me.
+    </p>
+    <h1>💍 Be mine. Always.</h1>
+    <img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" width="260">
+  </div>
+</main>
+
+<script>
+const zone=document.getElementById("zone");
+const yes=document.getElementById("yes");
+const no=document.getElementById("no");
+const hint=document.getElementById("hint");
+const fake=document.getElementById("fake");
+const result=document.getElementById("result");
+const canvas=document.getElementById("confetti");
+const music=document.getElementById("music");
+
+const sass=[
+  "Be honest… you’re smiling 😏",
+  "MiMi… don’t embarrass yourself.",
+  "This is not a real option.",
+  "Universe rejected your request ❌",
+  "Why are you running 😭",
+  "Just press YES already 💀"
+];
+
+let count=0;
+let yesScale=1;
+
+/* CONFETTI */
+function resize(){
+  const dpr=window.devicePixelRatio||1;
+  canvas.width=innerWidth*dpr;
+  canvas.height=innerHeight*dpr;
+  canvas.style.width="100vw";
+  canvas.style.height="100vh";
+}
+resize();
+addEventListener("resize",resize);
+
+const confettiInstance=confetti.create(canvas,{resize:false,useWorker:true});
+
+/* NO ESCAPE */
+function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
+
+function dodge(px,py){
+  const z=zone.getBoundingClientRect();
+  const b=no.getBoundingClientRect();
+  let dx=(b.left+b.width/2)-px;
+  let dy=(b.top+b.height/2)-py;
+  let mag=Math.hypot(dx,dy)||1;
+  dx/=mag; dy/=mag;
+
+  no.style.left=clamp((b.left-z.left)+dx*160,0,z.width-b.width)+"px";
+  no.style.top=clamp((b.top-z.top)+dy*160,0,z.height-b.height)+"px";
+  no.style.transform="none";
+
+  yesScale=Math.min(2.8,yesScale+.12);
+  yes.style.transform=`translateY(-50%) scale(${yesScale})`;
+
+  hint.textContent=sass[count%sass.length];
+  fake.textContent="System message: rejecting NO ("+(count+1)+")";
+  count++;
+}
+
+zone.addEventListener("pointermove",e=>{
+  const b=no.getBoundingClientRect();
+  if(Math.hypot(
+    (b.left+b.width/2)-e.clientX,
+    (b.top+b.height/2)-e.clientY
+  )<160) dodge(e.clientX,e.clientY);
+});
+
+no.addEventListener("click",e=>e.preventDefault());
+
+/* YES */
+yes.addEventListener("click",()=>{
+  music.play().catch(()=>{});
+  zone.style.display="none";
+  hint.style.display="none";
+  fake.style.display="none";
+  result.style.display="block";
+
+  const end=Date.now()+1800;
+  (function frame(){
+    confettiInstance({
+      particleCount:14,
+      spread:100,
+      startVelocity:45,
+      origin:{x:Math.random(),y:Math.random()*0.4}
     });
+    if(Date.now()<end)requestAnimationFrame(frame);
+  })();
 
-    // NO → soft & elegant escape
-    noBtn.addEventListener('mouseover', () => {
-      const x = (Math.random() - 0.5) * 180;
-      const y = (Math.random() - 0.5) * 140;
-      noBtn.style.transform = `translate(${x}px, ${y}px) scale(0.92)`;
-      noBtn.style.transition = 'all 0.6s ease';
+  setTimeout(()=>{
+    confettiInstance({
+      particleCount:350,
+      spread:150,
+      startVelocity:65,
+      origin:{x:.5,y:.6}
     });
+  },400);
+});
 
-    noBtn.addEventListener('click', () => {
-      question.classList.add('hidden');
-      yesBtn.style.display = 'none';
-      noBtn.innerHTML = "I understand…";
-      noBtn.disabled = true;
-      sad.classList.remove('hidden');
-    });
-
-    // Glitter particles
-    function createGlitter() {
-      const g = document.createElement('div');
-      g.className = 'glitter';
-      g.style.left = Math.random() * 100 + 'vw';
-      g.style.top = '-10px';
-      g.style.animationDuration = (Math.random() * 4 + 3) + 's';
-      g.style.animationDelay = Math.random() * 6 + 's';
-      g.style.background = ['#fff9c4','#ffd700','#ffeb3b','#ffe4e1'][Math.floor(Math.random()*4)];
-      document.body.appendChild(g);
-      setTimeout(() => g.remove(), 10000);
-    }
-
-    function createGlitterBurst(count) {
-      for(let i = 0; i < count; i++) {
-        setTimeout(() => {
-          const g = document.createElement('div');
-          g.className = 'glitter';
-          g.style.left = '50%';
-          g.style.top = '50%';
-          g.style.transform = `translate(-50%, -50%)`;
-          const angle = Math.random() * Math.PI * 2;
-          const dist = Math.random() * 400 + 100;
-          g.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
-          g.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
-          g.style.animation = 'sparkle 1.8s forwards';
-          document.body.appendChild(g);
-          setTimeout(() => g.remove(), 2500);
-        }, i * 40);
-      }
-    }
-
-    // Floating princess hearts
-    function createHeartRain(count) {
-      for(let i = 0; i < count; i++) {
-        setTimeout(() => {
-          const h = document.createElement('div');
-          h.className = 'princess-heart';
-          h.innerHTML = ['💗','💖','✨','💕','🌸','👑'][Math.floor(Math.random()*6)];
-          h.style.left = Math.random() * 100 + 'vw';
-          h.style.top = '100vh';
-          h.style.fontSize = (Math.random() * 2 + 1.8) + 'rem';
-          h.style.animationDuration = (Math.random() * 8 + 10) + 's';
-          document.body.appendChild(h);
-          setTimeout(() => h.remove(), 18000);
-        }, i * 180);
-      }
-    }
-
-    // Gentle background sparkle
-    setInterval(createGlitter, 600);
-
-    // Initial soft heart rain
-    createHeartRain(12);
-  </script>
-
-  <style>
-    @keyframes sparkle {
-      0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.1); }
-      30%  { opacity: 1; transform: translate(var(--tx), var(--ty)) scale(1.3); }
-      100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0.4); }
-    }
-  </style>
-
+/* SECRET WAIT */
+setTimeout(()=>{
+  if(result.style.display!=="block"){
+    hint.textContent="Destiny is getting impatient 😌";
+  }
+},12000);
+</script>
 </body>
 </html>
+
