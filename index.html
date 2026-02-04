@@ -119,6 +119,33 @@ button{
   to{transform:scale(1);opacity:1}
 }
 
+/* HEARTBEAT */
+@keyframes heartbeat{
+  0%{transform:translateY(-50%) scale(1)}
+  25%{transform:translateY(-50%) scale(1.05)}
+  40%{transform:translateY(-50%) scale(1)}
+  60%{transform:translateY(-50%) scale(1.08)}
+  100%{transform:translateY(-50%) scale(1)}
+}
+
+.heartbeat{
+  animation:heartbeat 1.4s infinite;
+}
+
+/* FREEZE FRAME */
+.freeze{
+  position:fixed;
+  inset:0;
+  background:rgba(255,255,255,.96);
+  display:grid;
+  place-items:center;
+  z-index:99999;
+  text-align:center;
+  font-size:clamp(28px,5vw,52px);
+  padding:24px;
+  animation:pop .4s ease;
+}
+
 audio{display:none}
 </style>
 </head>
@@ -130,36 +157,30 @@ audio{display:none}
   <source src="https://assets.mixkit.co/music/preview/mixkit-romantic-piano-loop-779.mp3">
 </audio>
 
-<main class="card" id="card">
-  <h1 id="title">MiMi… 🥹💖</h1>
-  <p id="subtitle">
-    This page has one purpose.  
-    One question.  
+<main class="card">
+  <h1>MiMi… 🥹💖</h1>
+  <p>
+    This page has one purpose.<br>
+    One question.<br>
     One correct answer.
   </p>
 
-  <h1 id="question">Will you be my Valentine?</h1>
+  <h1>Will you be my Valentine?</h1>
 
   <div class="zone" id="zone">
     <button id="yes">YES 💘</button>
     <button id="no">No 🙄</button>
   </div>
 
-  <div class="hint" id="hint">
-    ⚠️ “No” may cause emotional consequences.
-  </div>
+  <div class="hint" id="hint">⚠️ “No” may cause emotional consequences.</div>
   <div class="fake" id="fake"></div>
 
   <div class="result" id="result">
     <h1>OKAY OKAY 😭❤️</h1>
+    <p><strong>WE</strong> win.</p>
     <p>
-      You win. Or actually…  
-      **WE** win.
-    </p>
-    <p>
-      MiMi, this wasn’t just a page.  
-      It’s a memory.  
-      And I hope you never forget how special you are to me.
+      MiMi, this wasn’t just a page.<br>
+      It’s a memory — and now it’s ours.
     </p>
     <h1>💍 Be mine. Always.</h1>
     <img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" width="260">
@@ -176,13 +197,26 @@ const result=document.getElementById("result");
 const canvas=document.getElementById("confetti");
 const music=document.getElementById("music");
 
+/* 10 FUNNY NO JOKES */
 const sass=[
-  "Be honest… you’re smiling 😏",
-  "MiMi… don’t embarrass yourself.",
-  "This is not a real option.",
-  "Universe rejected your request ❌",
-  "Why are you running 😭",
-  "Just press YES already 💀"
+  "Nice try, rebel 😏",
+  "That button is for decoration only.",
+  "MiMi pls… be serious.",
+  "Even the button doesn’t believe you.",
+  "This isn’t that kind of website.",
+  "No button said ‘I quit’.",
+  "Are you pressing this for fun? 🙄",
+  "At this point it’s just embarrassing for No.",
+  "Girl… stop lying to yourself 😌",
+  "Okay now you’re just flirting."
+];
+
+const reacts=[
+  "MiMi is plotting something…",
+  "MiMi is enjoying this way too much 😏",
+  "MiMi knows how this ends.",
+  "MiMi vs. the No button — who wins?",
+  "Spoiler: it’s not No."
 ];
 
 let count=0;
@@ -201,26 +235,30 @@ addEventListener("resize",resize);
 
 const confettiInstance=confetti.create(canvas,{resize:false,useWorker:true});
 
-/* NO ESCAPE */
+/* HEARTBEAT AFTER DELAY */
+setTimeout(()=>yes.classList.add("heartbeat"),2200);
+
+/* NO BUTTON DODGE */
 function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
 
 function dodge(px,py){
   const z=zone.getBoundingClientRect();
   const b=no.getBoundingClientRect();
+
   let dx=(b.left+b.width/2)-px;
   let dy=(b.top+b.height/2)-py;
   let mag=Math.hypot(dx,dy)||1;
   dx/=mag; dy/=mag;
 
-  no.style.left=clamp((b.left-z.left)+dx*160,0,z.width-b.width)+"px";
-  no.style.top=clamp((b.top-z.top)+dy*160,0,z.height-b.height)+"px";
-  no.style.transform="none";
+  no.style.left=clamp((b.left-z.left)+dx*140,0,z.width-b.width)+"px";
+  no.style.top=clamp((b.top-z.top)+dy*140,0,z.height-b.height)+"px";
+  no.style.transform="rotate("+(Math.random()*18-9)+"deg)";
 
-  yesScale=Math.min(2.8,yesScale+.12);
+  yesScale=Math.min(2.6,yesScale+.12);
   yes.style.transform=`translateY(-50%) scale(${yesScale})`;
 
   hint.textContent=sass[count%sass.length];
-  fake.textContent="System message: rejecting NO ("+(count+1)+")";
+  fake.textContent=reacts[count%reacts.length];
   count++;
 }
 
@@ -229,46 +267,42 @@ zone.addEventListener("pointermove",e=>{
   if(Math.hypot(
     (b.left+b.width/2)-e.clientX,
     (b.top+b.height/2)-e.clientY
-  )<160) dodge(e.clientX,e.clientY);
+  )<150) dodge(e.clientX,e.clientY);
 });
 
 no.addEventListener("click",e=>e.preventDefault());
 
-/* YES */
+/* YES CLICK */
 yes.addEventListener("click",()=>{
   music.play().catch(()=>{});
-  zone.style.display="none";
-  hint.style.display="none";
-  fake.style.display="none";
-  result.style.display="block";
 
-  const end=Date.now()+1800;
-  (function frame(){
-    confettiInstance({
-      particleCount:14,
-      spread:100,
-      startVelocity:45,
-      origin:{x:Math.random(),y:Math.random()*0.4}
-    });
-    if(Date.now()<end)requestAnimationFrame(frame);
-  })();
+  const freeze=document.createElement("div");
+  freeze.className="freeze";
+  freeze.innerHTML="💖 MI MI 💖<br>This moment is officially ours.";
+  document.body.appendChild(freeze);
 
   setTimeout(()=>{
+    freeze.remove();
+    zone.style.display="none";
+    hint.style.display="none";
+    fake.style.display="none";
+    result.style.display="block";
+
     confettiInstance({
       particleCount:350,
       spread:150,
       startVelocity:65,
       origin:{x:.5,y:.6}
     });
-  },400);
+  },1600);
 });
 
-/* SECRET WAIT */
+/* WAIT TEASE */
 setTimeout(()=>{
   if(result.style.display!=="block"){
-    hint.textContent="Destiny is getting impatient 😌";
+    hint.textContent="MiMi… the YES button is waiting patiently 🥹";
   }
-},12000);
+},10000);
 </script>
 </body>
 </html>
