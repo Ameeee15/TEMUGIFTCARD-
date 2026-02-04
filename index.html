@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>MiMi 💖</title>
 
-<!-- GOOGLE FONT (ELEGANT + CUTE) -->
+<!-- GOOGLE FONT -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
@@ -14,8 +14,6 @@
 
 <style>
 :root{
-  --pink1:#ffd1e8;
-  --pink2:#fff0f7;
   --card:#ffffffee;
   --yes:#ff2f7b;
   --yesHover:#ff145f;
@@ -23,7 +21,7 @@
 
 *{
   box-sizing:border-box;
-  font-family:'Nunito', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:'Nunito', system-ui, -apple-system, sans-serif;
 }
 
 body{
@@ -32,8 +30,8 @@ body{
   display:grid;
   place-items:center;
   background:
-    linear-gradient(rgba(255,240,247,.85), rgba(255,240,247,.9)),
-    url("https://images.unsplash.com/photo-1615484477778-ca3b77940c25?q=80&w=1600&auto=format&fit=crop");
+    linear-gradient(rgba(255,235,245,.88), rgba(255,235,245,.92)),
+    url("https://images.unsplash.com/photo-1601758123927-1965d9c9c9a6?q=80&w=1600&auto=format&fit=crop");
   background-size:cover;
   background-position:center bottom;
   background-repeat:no-repeat;
@@ -45,17 +43,19 @@ canvas{
   position:fixed;
   inset:0;
   pointer-events:none;
-  z-index:999;
+  z-index:20;
 }
 
 .card{
   width:min(720px,96vw);
-  padding:32px 24px 36px;
+  padding:34px 26px 38px;
   background:var(--card);
   backdrop-filter:blur(10px);
   border-radius:28px;
   text-align:center;
   box-shadow:0 30px 90px rgba(0,0,0,.18);
+  position:relative;
+  z-index:10;
 }
 
 h1{
@@ -66,7 +66,6 @@ h1{
 
 p{
   font-size:16px;
-  font-weight:400;
   opacity:.85;
   margin-bottom:22px;
 }
@@ -76,7 +75,6 @@ p{
   width:min(520px,100%);
   height:180px;
   margin:0 auto;
-  touch-action:none;
 }
 
 button{
@@ -91,7 +89,6 @@ button{
   cursor:pointer;
   box-shadow:0 14px 30px rgba(0,0,0,.18);
   user-select:none;
-  -webkit-tap-highlight-color:transparent;
   transition:transform .15s ease,background .15s ease;
 }
 
@@ -143,18 +140,18 @@ button{
 }
 .heartbeat{animation:heartbeat 1.5s infinite}
 
-/* FREEZE MOMENT */
+/* FIXED FREEZE POPUP */
 .freeze{
   position:fixed;
   inset:0;
   background:rgba(255,255,255,.96);
-  display:grid;
-  place-items:center;
-  z-index:99999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   text-align:center;
+  z-index:99999;
   font-size:clamp(26px,5vw,50px);
-  padding:28px;
-  font-weight:700;
+  font-weight:800;
   animation:pop .4s ease;
 }
 
@@ -170,7 +167,7 @@ audio{display:none}
 </audio>
 
 <main class="card">
-  <h1>💖🧸MiMi🧸💖</h1>
+  <h1>MiMi… 🧸💖</h1>
   <p>
     I made this for the prettiest girl in the world.<br>
     No rush. No pressure.
@@ -198,52 +195,34 @@ audio{display:none}
 </main>
 
 <script>
-const zone=document.getElementById("zone");
-const yes=document.getElementById("yes");
-const no=document.getElementById("no");
-const hint=document.getElementById("hint");
-const fake=document.getElementById("fake");
-const result=document.getElementById("result");
-const canvas=document.getElementById("confetti");
-const music=document.getElementById("music");
+const zone = document.getElementById("zone");
+const yes = document.getElementById("yes");
+const no = document.getElementById("no");
+const hint = document.getElementById("hint");
+const fake = document.getElementById("fake");
+const result = document.getElementById("result");
+const canvas = document.getElementById("confetti");
+const music = document.getElementById("music");
 
-const noLines=[
-  "Bold choice. Incorrect, but bold.",
-  "You’re pressing this like it matters.",
-  "Let’s not lie to ourselves.",
-  "That button is decorative at best.",
-  "Interesting strategy. Not effective.",
-  "MiMi… come on now.",
-  "We both know how this ends.",
-  "This is you flirting, right?",
-  "Okay, drama queen 😌",
-  "Alright, that’s enough teasing."
+const noLines = [
+  "Nice try 😌",
+  "That’s adorable, but no.",
+  "You’re just teasing now.",
+  "That button is decorative.",
+  "We both know the answer.",
+  "MiMi… be serious 😏",
+  "This isn’t fooling anyone.",
+  "You’re smiling, aren’t you?",
+  "Okay drama queen.",
+  "Alright, enough playing."
 ];
 
-const reactions=[
-  "MiMi is enjoying this 😏",
-  "MiMi pretending it’s difficult",
-  "MiMi already decided",
-  "MiMi vs destiny",
-  "MiMi being cute on purpose"
-];
+let count = 0;
+let yesScale = 1;
 
-let count=0;
-let yesScale=1;
+const confettiInstance = confetti.create(canvas,{resize:true,useWorker:true});
 
-function resize(){
-  const dpr=window.devicePixelRatio||1;
-  canvas.width=innerWidth*dpr;
-  canvas.height=innerHeight*dpr;
-  canvas.style.width="100vw";
-  canvas.style.height="100vh";
-}
-resize();
-addEventListener("resize",resize);
-
-const confettiInstance=confetti.create(canvas,{resize:false,useWorker:true});
-
-setTimeout(()=>yes.classList.add("heartbeat"),2400);
+setTimeout(()=>yes.classList.add("heartbeat"),2000);
 
 function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
 
@@ -257,13 +236,12 @@ function dodge(px,py){
 
   no.style.left=clamp((b.left-z.left)+dx*140,0,z.width-b.width)+"px";
   no.style.top=clamp((b.top-z.top)+dy*140,0,z.height-b.height)+"px";
-  no.style.transform="rotate("+(Math.random()*16-8)+"deg)";
 
-  yesScale=Math.min(2.6,yesScale+.1);
+  yesScale=Math.min(2.5,yesScale+.12);
   yes.style.transform=`translateY(-50%) scale(${yesScale})`;
 
   hint.textContent=noLines[count%noLines.length];
-  fake.textContent=reactions[count%reactions.length];
+  fake.textContent="MiMi is enjoying this 😏";
   count++;
 }
 
@@ -298,16 +276,11 @@ yes.addEventListener("click",()=>{
       startVelocity:65,
       origin:{x:.5,y:.6}
     });
-  },1600);
+  },1700);
 });
-
-setTimeout(()=>{
-  if(result.style.display!=="block"){
-    hint.textContent="The YES button is patiently waiting 🥹";
-  }
-},10000);
 </script>
 </body>
 </html>
+
 
 
