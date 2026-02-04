@@ -7,15 +7,12 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
 <style>
-*{
-  box-sizing:border-box;
-  font-family:'Nunito',sans-serif;
-}
+*{box-sizing:border-box;font-family:'Nunito',sans-serif}
 
 body{
   margin:0;
@@ -23,18 +20,20 @@ body{
   display:grid;
   place-items:center;
   background:
-    linear-gradient(rgba(255,235,245,.88), rgba(255,235,245,.92)),
+    linear-gradient(rgba(255,235,245,.9), rgba(255,235,245,.95)),
     url("https://images.unsplash.com/photo-1601758123927-1965d9c9c9a6?q=80&w=1600&auto=format&fit=crop");
   background-size:cover;
   background-position:center bottom;
   overflow:hidden;
 }
 
-canvas{
+/* CONFETTI CANVAS — OFF BY DEFAULT */
+#confetti{
   position:fixed;
   inset:0;
   pointer-events:none;
   z-index:1;
+  display:none;
 }
 
 .card{
@@ -50,10 +49,7 @@ canvas{
 h1{font-weight:800}
 p{opacity:.85}
 
-.zone{
-  position:relative;
-  height:180px;
-}
+.zone{height:180px}
 
 button{
   padding:16px 30px;
@@ -65,33 +61,17 @@ button{
   box-shadow:0 14px 30px rgba(0,0,0,.18);
 }
 
-#yes{
-  background:#ff2f7b;
-  color:#fff;
-}
-
+#yes{background:#ff2f7b;color:#fff}
 #no{
   background:#e5e7eb;
   position:fixed;
   z-index:5;
 }
 
-.hint{
-  margin-top:14px;
-  font-size:15px;
-  min-height:26px;
-}
+.hint{margin-top:14px;min-height:26px}
+.fake{font-size:13px;opacity:.6}
 
-.fake{
-  font-size:13px;
-  opacity:.65;
-  min-height:18px;
-}
-
-.result{
-  display:none;
-  margin-top:26px;
-}
+.result{display:none;margin-top:26px}
 
 .freeze{
   position:fixed;
@@ -100,7 +80,7 @@ button{
   display:grid;
   place-items:center;
   font-size:clamp(28px,5vw,52px);
-  font-weight:800;
+  font-weight:900;
   z-index:9999;
 }
 
@@ -109,6 +89,7 @@ audio{display:none}
 </head>
 
 <body>
+
 <canvas id="confetti"></canvas>
 
 <audio id="music" loop>
@@ -143,65 +124,56 @@ const no = document.getElementById("no");
 const hint = document.getElementById("hint");
 const fake = document.getElementById("fake");
 const result = document.getElementById("result");
-const card = document.getElementById("card");
-const canvas = document.getElementById("confetti");
+const confettiCanvas = document.getElementById("confetti");
 const music = document.getElementById("music");
 
 const jokes=[
-  "Nice try 😌",
-  "That’s adorable, but no.",
-  "You really thought?",
-  "MiMi… behave 😏",
-  "You’re smiling right now.",
-  "This button is lying to you.",
-  "Bold choice. Wrong one.",
-  "Drama detected.",
-  "You’re enjoying this.",
-  "Okay now you’re flirting."
+  "Nice try 😌","That’s adorable, but no.","You really thought?",
+  "MiMi… behave 😏","You’re smiling.","Wrong button.",
+  "Drama detected.","You enjoy chaos.","Still no.","Give up 😌"
 ];
-
 const reactions=[
-  "MiMi vs destiny",
-  "Universe laughing quietly",
-  "System override engaged",
-  "Romantic sabotage detected",
-  "Probability of NO: 0%"
+  "Universe says nope",
+  "Destiny laughing",
+  "Probability of NO: 0%",
+  "Romantic override active",
+  "System error: NO invalid"
 ];
 
-let j=0, r=0;
+let j=0,r=0;
 
-/* NO BUTTON CHAOS */
+/* NO BUTTON RUNS EVERYWHERE */
 function moveNo(){
   no.style.left=Math.random()*(innerWidth-120)+"px";
   no.style.top=Math.random()*(innerHeight-60)+"px";
   no.style.transform=`rotate(${Math.random()*360}deg)`;
-
   hint.textContent=jokes[j++%jokes.length];
   fake.textContent=reactions[r++%reactions.length];
 }
 no.addEventListener("mouseenter",moveNo);
 no.addEventListener("click",e=>e.preventDefault());
 
-/* CONFETTI (STARTS ONLY AFTER YES) */
-const confettiInstance=confetti.create(canvas,{resize:true,useWorker:true});
-let confettiRunning=false;
+/* CONFETTI — CREATED BUT NOT RUNNING */
+const confettiInstance = confetti.create(confettiCanvas,{resize:true,useWorker:true});
+let rainActive=false;
 
 function startConfettiRain(){
-  if(confettiRunning) return;
-  confettiRunning=true;
+  if(rainActive) return;
+  rainActive=true;
+  confettiCanvas.style.display="block";
 
   (function rain(){
     confettiInstance({
-      particleCount:30,
-      spread:120,
+      particleCount:35,
+      spread:140,
       startVelocity:0,
-      gravity:0.7,
-      ticks:500,
-      scalar:1.5,
+      gravity:0.75,
+      ticks:600,
+      scalar:1.6,
       shapes:["square","circle"],
       origin:{x:Math.random(),y:-0.1}
     });
-    if(confettiRunning) setTimeout(rain,120);
+    if(rainActive) setTimeout(rain,120);
   })();
 }
 
@@ -214,17 +186,22 @@ yes.addEventListener("click",()=>{
   freeze.innerHTML="MiMi 💖<br>This moment is yours now.";
   document.body.appendChild(freeze);
 
-  confettiInstance({particleCount:500,spread:180,startVelocity:70});
-
   setTimeout(()=>{
     freeze.remove();
     result.style.display="block";
     startConfettiRain();
-  },1800);
+
+    confettiInstance({
+      particleCount:600,
+      spread:180,
+      startVelocity:80
+    });
+  },1600);
 });
 </script>
 </body>
 </html>
+
 
 
 
