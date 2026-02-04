@@ -3,7 +3,12 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>MiMi 💖 A Very Serious Question</title>
+<title>MiMi 💖</title>
+
+<!-- GOOGLE FONT (ELEGANT + CUTE) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
@@ -16,15 +21,22 @@
   --yesHover:#ff145f;
 }
 
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+  font-family:'Nunito', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
 
 body{
   margin:0;
   min-height:100svh;
   display:grid;
   place-items:center;
-  background:radial-gradient(circle at top,var(--pink2),var(--pink1));
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+  background:
+    linear-gradient(rgba(255,240,247,.85), rgba(255,240,247,.9)),
+    url("https://images.unsplash.com/photo-1615484477778-ca3b77940c25?q=80&w=1600&auto=format&fit=crop");
+  background-size:cover;
+  background-position:center bottom;
+  background-repeat:no-repeat;
   overflow:hidden;
   padding:14px;
 }
@@ -38,23 +50,25 @@ canvas{
 
 .card{
   width:min(720px,96vw);
-  padding:30px 22px 34px;
+  padding:32px 24px 36px;
   background:var(--card);
-  backdrop-filter:blur(12px);
+  backdrop-filter:blur(10px);
   border-radius:28px;
   text-align:center;
-  box-shadow:0 30px 90px rgba(0,0,0,.2);
+  box-shadow:0 30px 90px rgba(0,0,0,.18);
 }
 
 h1{
-  font-size:clamp(26px,4.5vw,48px);
+  font-size:clamp(26px,4.6vw,48px);
   margin:10px 0;
+  font-weight:800;
 }
 
 p{
   font-size:16px;
-  opacity:.82;
-  margin-bottom:20px;
+  font-weight:400;
+  opacity:.85;
+  margin-bottom:22px;
 }
 
 .zone{
@@ -69,9 +83,9 @@ button{
   position:absolute;
   top:50%;
   transform:translateY(-50%);
-  padding:16px 28px;
+  padding:16px 30px;
   font-size:18px;
-  font-weight:900;
+  font-weight:800;
   border-radius:999px;
   border:none;
   cursor:pointer;
@@ -110,12 +124,12 @@ button{
 
 .result{
   display:none;
-  margin-top:26px;
+  margin-top:28px;
   animation:pop .5s ease;
 }
 
 @keyframes pop{
-  from{transform:scale(.9);opacity:0}
+  from{transform:scale(.92);opacity:0}
   to{transform:scale(1);opacity:1}
 }
 
@@ -127,12 +141,9 @@ button{
   60%{transform:translateY(-50%) scale(1.08)}
   100%{transform:translateY(-50%) scale(1)}
 }
+.heartbeat{animation:heartbeat 1.5s infinite}
 
-.heartbeat{
-  animation:heartbeat 1.4s infinite;
-}
-
-/* FREEZE FRAME */
+/* FREEZE MOMENT */
 .freeze{
   position:fixed;
   inset:0;
@@ -141,8 +152,9 @@ button{
   place-items:center;
   z-index:99999;
   text-align:center;
-  font-size:clamp(28px,5vw,52px);
-  padding:24px;
+  font-size:clamp(26px,5vw,50px);
+  padding:28px;
+  font-weight:700;
   animation:pop .4s ease;
 }
 
@@ -158,11 +170,10 @@ audio{display:none}
 </audio>
 
 <main class="card">
-  <h1>MiMi… 🥹💖</h1>
+  <h1>MiMi… 🧸💖</h1>
   <p>
-    This page has one purpose.<br>
-    One question.<br>
-    One correct answer.
+    I made this just for you.<br>
+    No rush. No pressure.
   </p>
 
   <h1>Will you be my Valentine?</h1>
@@ -172,17 +183,16 @@ audio{display:none}
     <button id="no">No 🙄</button>
   </div>
 
-  <div class="hint" id="hint">⚠️ “No” may cause emotional consequences.</div>
+  <div class="hint" id="hint">Careful… that button has feelings 😌</div>
   <div class="fake" id="fake"></div>
 
   <div class="result" id="result">
-    <h1>OKAY OKAY 😭❤️</h1>
-    <p><strong>WE</strong> win.</p>
+    <h1>There it is ❤️</h1>
     <p>
-      MiMi, this wasn’t just a page.<br>
-      It’s a memory — and now it’s ours.
+      No jokes now.<br>
+      Just me choosing you.
     </p>
-    <h1>💍 Be mine. Always.</h1>
+    <h1>💍 Always.</h1>
     <img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" width="260">
   </div>
 </main>
@@ -197,32 +207,30 @@ const result=document.getElementById("result");
 const canvas=document.getElementById("confetti");
 const music=document.getElementById("music");
 
-/* 10 FUNNY NO JOKES */
-const sass=[
-  "Nice try, rebel 😏",
-  "That button is for decoration only.",
-  "MiMi pls… be serious.",
-  "Even the button doesn’t believe you.",
-  "This isn’t that kind of website.",
-  "No button said ‘I quit’.",
-  "Are you pressing this for fun? 🙄",
-  "At this point it’s just embarrassing for No.",
-  "Girl… stop lying to yourself 😌",
-  "Okay now you’re just flirting."
+const noLines=[
+  "Bold choice. Incorrect, but bold.",
+  "You’re pressing this like it matters.",
+  "Let’s not lie to ourselves.",
+  "That button is decorative at best.",
+  "Interesting strategy. Not effective.",
+  "MiMi… come on now.",
+  "We both know how this ends.",
+  "This is you flirting, right?",
+  "Okay, drama queen 😌",
+  "Alright, that’s enough teasing."
 ];
 
-const reacts=[
-  "MiMi is plotting something…",
-  "MiMi is enjoying this way too much 😏",
-  "MiMi knows how this ends.",
-  "MiMi vs. the No button — who wins?",
-  "Spoiler: it’s not No."
+const reactions=[
+  "MiMi is enjoying this 😏",
+  "MiMi pretending it’s difficult",
+  "MiMi already decided",
+  "MiMi vs destiny",
+  "MiMi being cute on purpose"
 ];
 
 let count=0;
 let yesScale=1;
 
-/* CONFETTI */
 function resize(){
   const dpr=window.devicePixelRatio||1;
   canvas.width=innerWidth*dpr;
@@ -235,16 +243,13 @@ addEventListener("resize",resize);
 
 const confettiInstance=confetti.create(canvas,{resize:false,useWorker:true});
 
-/* HEARTBEAT AFTER DELAY */
-setTimeout(()=>yes.classList.add("heartbeat"),2200);
+setTimeout(()=>yes.classList.add("heartbeat"),2400);
 
-/* NO BUTTON DODGE */
 function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
 
 function dodge(px,py){
   const z=zone.getBoundingClientRect();
   const b=no.getBoundingClientRect();
-
   let dx=(b.left+b.width/2)-px;
   let dy=(b.top+b.height/2)-py;
   let mag=Math.hypot(dx,dy)||1;
@@ -252,13 +257,13 @@ function dodge(px,py){
 
   no.style.left=clamp((b.left-z.left)+dx*140,0,z.width-b.width)+"px";
   no.style.top=clamp((b.top-z.top)+dy*140,0,z.height-b.height)+"px";
-  no.style.transform="rotate("+(Math.random()*18-9)+"deg)";
+  no.style.transform="rotate("+(Math.random()*16-8)+"deg)";
 
-  yesScale=Math.min(2.6,yesScale+.12);
+  yesScale=Math.min(2.6,yesScale+.1);
   yes.style.transform=`translateY(-50%) scale(${yesScale})`;
 
-  hint.textContent=sass[count%sass.length];
-  fake.textContent=reacts[count%reacts.length];
+  hint.textContent=noLines[count%noLines.length];
+  fake.textContent=reactions[count%reactions.length];
   count++;
 }
 
@@ -272,13 +277,12 @@ zone.addEventListener("pointermove",e=>{
 
 no.addEventListener("click",e=>e.preventDefault());
 
-/* YES CLICK */
 yes.addEventListener("click",()=>{
   music.play().catch(()=>{});
 
   const freeze=document.createElement("div");
   freeze.className="freeze";
-  freeze.innerHTML="💖 MIMI 💖<br>This moment is officially ours.";
+  freeze.innerHTML="MiMi 🧸💖<br>This moment is yours now.";
   document.body.appendChild(freeze);
 
   setTimeout(()=>{
@@ -297,13 +301,13 @@ yes.addEventListener("click",()=>{
   },1600);
 });
 
-/* WAIT TEASE */
 setTimeout(()=>{
   if(result.style.display!=="block"){
-    hint.textContent="MiMi… the YES button is waiting patiently 🥹";
+    hint.textContent="The YES button is patiently waiting 🥹";
   }
 },10000);
 </script>
 </body>
 </html>
+
 
