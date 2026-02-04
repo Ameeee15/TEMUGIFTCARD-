@@ -7,7 +7,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
@@ -27,7 +27,7 @@ body{
   overflow:hidden;
 }
 
-/* CONFETTI MUST BE IN FRONT */
+/* CONFETTI — ALWAYS IN FRONT */
 #confetti{
   position:fixed;
   inset:0;
@@ -37,7 +37,7 @@ body{
 
 .card{
   width:min(720px,94vw);
-  padding:32px 26px 36px;
+  padding:34px 26px 38px;
   background:#ffffffee;
   border-radius:28px;
   text-align:center;
@@ -46,12 +46,10 @@ body{
 }
 
 h1{font-weight:800;margin:10px 0}
-p{opacity:.85;margin-bottom:20px}
-
-.zone{height:180px}
+p{opacity:.85;margin-bottom:18px}
 
 button{
-  padding:16px 30px;
+  padding:16px 32px;
   font-size:18px;
   font-weight:800;
   border-radius:999px;
@@ -71,16 +69,9 @@ button{
 .hint{margin-top:14px;min-height:24px}
 .fake{font-size:13px;opacity:.65;min-height:18px}
 
-.result{
-  display:none;
-  margin-top:26px;
-  animation:pop .5s ease;
-}
-
-@keyframes pop{
-  from{transform:scale(.95);opacity:0}
-  to{transform:scale(1);opacity:1}
-}
+/* STATES */
+#questionState{}
+#resultState{display:none}
 
 .freeze{
   position:fixed;
@@ -105,26 +96,29 @@ audio{display:none}
   <source src="https://assets.mixkit.co/music/preview/mixkit-romantic-piano-loop-779.mp3">
 </audio>
 
-<div class="card" id="card">
-  <h1>MiMi… 🧸💖</h1>
-  <p>I made this for the prettiest girl in the world.</p>
+<div class="card">
 
-  <h1>Will you be my Valentine?</h1>
+  <!-- QUESTION STATE -->
+  <div id="questionState">
+    <h1>💖🧸MiMi🧸💖</h1>
+    <p>I made this for the prettiest girl in the world.</p>
 
-  <div class="zone">
+    <h1>Will you be my Valentine?</h1>
     <button id="yes">YES 💘</button>
+
+    <div class="hint" id="hint"></div>
+    <div class="fake" id="fake"></div>
   </div>
 
-  <div class="hint" id="hint"></div>
-  <div class="fake" id="fake"></div>
-
-  <div class="result" id="result">
+  <!-- RESULT STATE -->
+  <div id="resultState">
     <h1>OKAY OKAY 😭❤️</h1>
     <p>You win. Or actually…<br><strong>WE</strong> win.</p>
     <p>MiMi, this wasn’t just a page.<br>It’s a memory.</p>
     <h1>💍 Be mine. Always.</h1>
     <img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" width="260">
   </div>
+
 </div>
 
 <button id="no">No 🙄</button>
@@ -134,7 +128,8 @@ const yes = document.getElementById("yes");
 const no = document.getElementById("no");
 const hint = document.getElementById("hint");
 const fake = document.getElementById("fake");
-const result = document.getElementById("result");
+const qState = document.getElementById("questionState");
+const rState = document.getElementById("resultState");
 const canvas = document.getElementById("confetti");
 const music = document.getElementById("music");
 
@@ -154,54 +149,54 @@ const reactions=[
 ];
 
 let j=0,r=0;
-
 function moveNo(){
   no.style.left=Math.random()*(innerWidth-120)+"px";
   no.style.top=Math.random()*(innerHeight-60)+"px";
-  no.style.transform=`rotate(${Math.random()*360}deg)`;
+  no.style.transform=rotate(${Math.random()*360}deg);
   hint.textContent=jokes[j++%jokes.length];
   fake.textContent=reactions[r++%reactions.length];
 }
 no.addEventListener("mouseenter",moveNo);
 no.addEventListener("click",e=>e.preventDefault());
 
-/* CONFETTI SETUP */
+/* CONFETTI */
 const confettiInstance = confetti.create(canvas,{resize:true,useWorker:true});
-const heart = confetti.shapeFromText({ text: "💖", scalar: 2 });
-
+const heart = confetti.shapeFromText({ text:"💖", scalar:2 });
 let raining=false;
+
 function startRain(){
   if(raining) return;
   raining=true;
 
   (function rain(){
     confettiInstance({
-      particleCount:35,
+      particleCount:40,
       spread:140,
       startVelocity:0,
       gravity:0.8,
       ticks:600,
-      scalar:1.4,
+      scalar:1.5,
       shapes:["square","circle",heart],
       origin:{x:Math.random(),y:-0.1}
     });
-    if(raining) setTimeout(rain,120);
+    setTimeout(rain,120);
   })();
 }
 
-/* YES CLICK */
+/* YES CLICK — SINGLE SOURCE OF TRUTH */
 yes.addEventListener("click",()=>{
   music.play().catch(()=>{});
 
   // REMOVE NO BUTTON COMPLETELY
   no.remove();
 
+  // FREEZE MOMENT
   const freeze=document.createElement("div");
   freeze.className="freeze";
   freeze.innerHTML="MiMi 💖<br>This moment is yours now.";
   document.body.appendChild(freeze);
 
-  // MASSIVE BLAST
+  // BIG BLAST
   confettiInstance({
     particleCount:700,
     spread:180,
@@ -212,14 +207,12 @@ yes.addEventListener("click",()=>{
 
   setTimeout(()=>{
     freeze.remove();
-    result.style.display="block";
+    qState.style.display="none";
+    rState.style.display="block";
     startRain();
   },1700);
 });
 </script>
+
 </body>
 </html>
-
-
-
-
