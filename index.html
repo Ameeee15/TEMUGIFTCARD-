@@ -12,10 +12,7 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
 <style>
-*{
-  box-sizing:border-box;
-  font-family:'Nunito',sans-serif;
-}
+*{box-sizing:border-box;font-family:'Nunito',sans-serif}
 
 body{
   margin:0;
@@ -48,20 +45,8 @@ body{
   z-index:2;
 }
 
-h1{
-  font-weight:800;
-  margin:10px 0;
-}
-
-#title{
-  cursor:pointer;
-  user-select:none;
-}
-
-p{
-  opacity:.85;
-  margin-bottom:18px;
-}
+h1{font-weight:800;margin:10px 0}
+p{opacity:.85;margin-bottom:18px}
 
 button{
   padding:16px 32px;
@@ -73,10 +58,7 @@ button{
   box-shadow:0 14px 30px rgba(0,0,0,.18);
 }
 
-#yes{
-  background:#ff2f7b;
-  color:#fff;
-}
+#yes{background:#ff2f7b;color:#fff}
 
 #no{
   background:#e5e7eb;
@@ -84,21 +66,12 @@ button{
   z-index:5;
 }
 
-.hint{
-  margin-top:14px;
-  min-height:24px;
-}
-
-.fake{
-  font-size:13px;
-  opacity:.65;
-  min-height:18px;
-}
+.hint{margin-top:14px;min-height:24px}
+.fake{font-size:13px;opacity:.65;min-height:18px}
 
 /* STATES */
-#resultState{
-  display:none;
-}
+#questionState{}
+#resultState{display:none}
 
 .freeze{
   position:fixed;
@@ -106,15 +79,12 @@ button{
   background:rgba(255,255,255,.96);
   display:grid;
   place-items:center;
-  text-align:center;
   font-size:clamp(28px,5vw,52px);
   font-weight:900;
   z-index:9998;
 }
 
-audio{
-  display:none;
-}
+audio{display:none}
 </style>
 </head>
 
@@ -130,7 +100,7 @@ audio{
 
   <!-- QUESTION STATE -->
   <div id="questionState">
-    <h1 id="title">💖🧸MiMi🧸💖</h1>
+    <h1>MiMi… 🧸💖</h1>
     <p>I made this for the prettiest girl in the world.</p>
 
     <h1>Will you be my Valentine?</h1>
@@ -146,7 +116,7 @@ audio{
     <p>You win. Or actually…<br><strong>WE</strong> win.</p>
     <p>MiMi, this wasn’t just a page.<br>It’s a memory.</p>
     <h1>💍 Be mine. Always.</h1>
-    <img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" width="260" alt="Celebration">
+    <img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" width="260">
   </div>
 
 </div>
@@ -162,17 +132,15 @@ const qState = document.getElementById("questionState");
 const rState = document.getElementById("resultState");
 const canvas = document.getElementById("confetti");
 const music = document.getElementById("music");
-const title = document.getElementById("title");
 
 /* NO BUTTON CHAOS */
-const jokes = [
+const jokes=[
   "Nice try 😌","That’s adorable, but no.","You really thought?",
   "MiMi… behave 😏","You’re smiling right now.",
   "Wrong button.","Drama detected.",
   "You enjoy this.","Still no.","Give up 😌"
 ];
-
-const reactions = [
+const reactions=[
   "Universe says nope",
   "Destiny laughing",
   "Probability of NO: 0%",
@@ -180,95 +148,69 @@ const reactions = [
   "System error: NO invalid"
 ];
 
-let j = 0, r = 0;
-
+let j=0,r=0;
 function moveNo(){
-  no.style.left = Math.random() * (innerWidth - 120) + "px";
-  no.style.top  = Math.random() * (innerHeight - 60) + "px";
-  no.style.transform = `rotate(${Math.random() * 360}deg)`;
-  hint.textContent = jokes[j++ % jokes.length];
-  fake.textContent = reactions[r++ % reactions.length];
+  no.style.left=Math.random()*(innerWidth-120)+"px";
+  no.style.top=Math.random()*(innerHeight-60)+"px";
+  no.style.transform=rotate(${Math.random()*360}deg);
+  hint.textContent=jokes[j++%jokes.length];
+  fake.textContent=reactions[r++%reactions.length];
 }
-
-no.addEventListener("mouseenter", moveNo);
-no.addEventListener("click", e => e.preventDefault());
+no.addEventListener("mouseenter",moveNo);
+no.addEventListener("click",e=>e.preventDefault());
 
 /* CONFETTI */
-const confettiInstance = confetti.create(canvas, {
-  resize: true,
-  useWorker: true
-});
-
-const heart = confetti.shapeFromText({
-  text: "💖",
-  scalar: 2
-});
-
-const rose = confetti.shapeFromText({
-  text: "🌹",
-  scalar: 2
-});
-
-/* ROSE ON TITLE TAP */
-title.addEventListener("click", () => {
-  confettiInstance({
-    particleCount: 25,
-    spread: 80,
-    startVelocity: 35,
-    gravity: 0.9,
-    ticks: 250,
-    scalar: 1.8,
-    shapes: [rose],
-    origin: { x: 0.5, y: 0.3 }
-  });
-});
-
-let raining = false;
+const confettiInstance = confetti.create(canvas,{resize:true,useWorker:true});
+const heart = confetti.shapeFromText({ text:"💖", scalar:2 });
+let raining=false;
 
 function startRain(){
-  if (raining) return;
-  raining = true;
+  if(raining) return;
+  raining=true;
 
   (function rain(){
     confettiInstance({
-      particleCount: 40,
-      spread: 140,
-      startVelocity: 0,
-      gravity: 0.8,
-      ticks: 600,
-      scalar: 1.5,
-      shapes: ["square","circle",heart],
-      origin: { x: Math.random(), y: -0.1 }
+      particleCount:40,
+      spread:140,
+      startVelocity:0,
+      gravity:0.8,
+      ticks:600,
+      scalar:1.5,
+      shapes:["square","circle",heart],
+      origin:{x:Math.random(),y:-0.1}
     });
-    setTimeout(rain, 120);
+    setTimeout(rain,120);
   })();
 }
 
-/* YES CLICK */
-yes.addEventListener("click", () => {
-  music.play().catch(() => {});
+/* YES CLICK — SINGLE SOURCE OF TRUTH */
+yes.addEventListener("click",()=>{
+  music.play().catch(()=>{});
 
+  // REMOVE NO BUTTON COMPLETELY
   no.remove();
 
-  const freeze = document.createElement("div");
-  freeze.className = "freeze";
-  freeze.innerHTML = "MiMi 💖<br>This moment is yours now.";
+  // FREEZE MOMENT
+  const freeze=document.createElement("div");
+  freeze.className="freeze";
+  freeze.innerHTML="MiMi 💖<br>This moment is yours now.";
   document.body.appendChild(freeze);
 
+  // BIG BLAST
   confettiInstance({
-    particleCount: 700,
-    spread: 180,
-    startVelocity: 80,
-    scalar: 1.6,
-    shapes: ["square","circle",heart]
+    particleCount:700,
+    spread:180,
+    startVelocity:80,
+    scalar:1.6,
+    shapes:["square","circle",heart]
   });
 
-  setTimeout(() => {
+  setTimeout(()=>{
     freeze.remove();
-    qState.style.display = "none";
-    rState.style.display = "block";
+    qState.style.display="none";
+    rState.style.display="block";
     startRain();
-  }, 1700);
+  },1700);
 });
 </script>
 
