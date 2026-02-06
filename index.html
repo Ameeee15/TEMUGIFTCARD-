@@ -34,10 +34,24 @@ body{
 #confetti{
   position:fixed;
   inset:0;
-  width:100vw;
-  height:100vh;
   pointer-events:none;
   z-index:9999;
+}
+
+/* FLOATING BIG ROSES */
+.rose{
+  position:fixed;
+  bottom:-120px;
+  font-size:96px;
+  opacity:.35;
+  animation:floatUp linear infinite;
+  pointer-events:none;
+  z-index:1;
+}
+
+@keyframes floatUp{
+  from{transform:translateY(0)}
+  to{transform:translateY(-120vh)}
 }
 
 .card{
@@ -73,35 +87,42 @@ button{
   border-radius:999px;
   border:none;
   cursor:pointer;
-  box-shadow:0 14px 30px rgba(0,0,0,.18);
 }
 
+/* YES GLOW */
 #yes{
   background:#ff2f7b;
   color:#fff;
+  animation:glow 1.8s infinite ease-in-out;
+  box-shadow:0 14px 30px rgba(0,0,0,.18);
+}
+
+@keyframes glow{
+  0%{
+    box-shadow:0 0 12px rgba(255,47,123,.5),
+               0 0 24px rgba(255,47,123,.4);
+  }
+  50%{
+    box-shadow:0 0 24px rgba(255,47,123,.9),
+               0 0 48px rgba(255,47,123,.7);
+  }
+  100%{
+    box-shadow:0 0 12px rgba(255,47,123,.5),
+               0 0 24px rgba(255,47,123,.4);
+  }
 }
 
 #no{
   background:#e5e7eb;
-  position:fixed;
+  margin-left:16px;
+  position:relative;
   z-index:5;
 }
 
 .hint{margin-top:14px;min-height:24px}
 .fake{font-size:13px;opacity:.65;min-height:18px}
 
-/* STATES */
-#resultState{
-  display:none;
-}
-
-#resultState h1{
-  font-size:clamp(32px,4.5vw,46px);
-}
-
-#resultState p{
-  font-size:19px;
-}
+#resultState{display:none}
 
 .freeze{
   position:fixed;
@@ -134,7 +155,11 @@ audio{display:none}
     <p>I made this for the prettiest girl in the world.</p>
 
     <h1>Will you be my Valentine?</h1>
-    <button id="yes">YES 💘</button>
+
+    <div style="margin-top:18px">
+      <button id="yes">YES 💘</button>
+      <button id="no">No 🙄</button>
+    </div>
 
     <div class="hint" id="hint"></div>
     <div class="fake" id="fake"></div>
@@ -150,85 +175,56 @@ audio{display:none}
 
 </div>
 
-<button id="no">No 🙄</button>
-
 <script>
-const yes = document.getElementById("yes");
-const no = document.getElementById("no");
-const hint = document.getElementById("hint");
-const fake = document.getElementById("fake");
-const qState = document.getElementById("questionState");
-const rState = document.getElementById("resultState");
-const canvas = document.getElementById("confetti");
-const music = document.getElementById("music");
-const title = document.getElementById("title");
+/* CONFETTI */
+const canvas=document.getElementById("confetti");
+canvas.width=innerWidth;
+canvas.height=innerHeight;
+addEventListener("resize",()=>{
+  canvas.width=innerWidth;
+  canvas.height=innerHeight;
+});
 
-/* CANVAS FIX */
-function resizeCanvas(){
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
-}
-resizeCanvas();
-addEventListener("resize", resizeCanvas);
-
-const confettiInstance = confetti.create(canvas,{
+const confettiInstance=confetti.create(canvas,{
   resize:false,
   useWorker:true
 });
 
-/* SHAPES */
-const heart = confetti.shapeFromText({ text:"💖", scalar:2 });
-const rose  = confetti.shapeFromText({ text:"🌹", scalar:2 });
+const heart=confetti.shapeFromText({text:"💖",scalar:2});
 
-/* 🌹 SLOW FLOATING ROSES (UPWARD) */
-function floatRoses(){
-  confettiInstance({
-    particleCount:6,
-    spread:30,
-    startVelocity:-6,
-    gravity:-0.15,
-    ticks:1200,
-    scalar:1.6,
-    shapes:[rose],
-    origin:{
-      x:Math.random(),
-      y:1.1
-    }
-  });
+/* FLOATING ROSES */
+function spawnRose(){
+  const r=document.createElement("div");
+  r.className="rose";
+  r.textContent="🌹";
+  r.style.left=Math.random()*100+"vw";
+  r.style.animationDuration=18+Math.random()*12+"s";
+  document.body.appendChild(r);
+  setTimeout(()=>r.remove(),30000);
 }
-setInterval(floatRoses, 700);
-
-/* ROSE ON TITLE TAP */
-title.addEventListener("click",()=>{
-  confettiInstance({
-    particleCount:20,
-    spread:80,
-    startVelocity:35,
-    gravity:0.9,
-    ticks:260,
-    scalar:1.8,
-    shapes:[rose],
-    origin:{ x:0.5, y:0.35 }
-  });
-});
+setInterval(spawnRose,1200);
 
 /* NO BUTTON CHAOS */
+const no=document.getElementById("no");
+const hint=document.getElementById("hint");
+const fake=document.getElementById("fake");
+
 const jokes=[
   "Nice try 😌","That’s adorable, but no.","You really thought?",
   "MiMi… behave 😏","You’re smiling right now.",
-  "Wrong button.","Drama detected.",
-  "You enjoy this.","Still no.","Give up 😌"
+  "Wrong button.","Drama detected.","You enjoy this."
 ];
+
 const reactions=[
   "Universe says nope",
   "Destiny laughing",
   "Probability of NO: 0%",
-  "Romantic override active",
-  "System error: NO invalid"
+  "Romantic override active"
 ];
 
 let j=0,r=0;
 function moveNo(){
+  no.style.position="fixed";
   no.style.left=Math.random()*(innerWidth-120)+"px";
   no.style.top=Math.random()*(innerHeight-60)+"px";
   no.style.transform=`rotate(${Math.random()*360}deg)`;
@@ -238,27 +234,12 @@ function moveNo(){
 no.addEventListener("mouseenter",moveNo);
 no.addEventListener("click",e=>e.preventDefault());
 
-/* HEART RAIN AFTER YES */
-let raining=false;
-function startRain(){
-  if(raining) return;
-  raining=true;
-  (function rain(){
-    confettiInstance({
-      particleCount:40,
-      spread:160,
-      startVelocity:0,
-      gravity:0.8,
-      ticks:700,
-      scalar:1.5,
-      shapes:["square","circle",heart],
-      origin:{ x:Math.random(), y:-0.05 }
-    });
-    setTimeout(rain,120);
-  })();
-}
-
 /* YES CLICK */
+const yes=document.getElementById("yes");
+const music=document.getElementById("music");
+const qState=document.getElementById("questionState");
+const rState=document.getElementById("resultState");
+
 yes.addEventListener("click",()=>{
   music.play().catch(()=>{});
   no.remove();
@@ -280,7 +261,6 @@ yes.addEventListener("click",()=>{
     freeze.remove();
     qState.style.display="none";
     rState.style.display="block";
-    startRain();
   },1700);
 });
 </script>
