@@ -12,7 +12,10 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
 <style>
-*{box-sizing:border-box;font-family:'Nunito',sans-serif}
+*{
+  box-sizing:border-box;
+  font-family:'Nunito',sans-serif;
+}
 
 body{
   margin:0;
@@ -27,29 +30,44 @@ body{
   overflow:hidden;
 }
 
-/* CONFETTI — ALWAYS IN FRONT */
+/* CONFETTI */
 #confetti{
   position:fixed;
   inset:0;
+  width:100vw;
+  height:100vh;
   pointer-events:none;
   z-index:9999;
 }
 
 .card{
-  width:min(720px,94vw);
-  padding:34px 26px 38px;
+  width:min(760px,94vw);
+  padding:38px 32px 42px;
   background:#ffffffee;
-  border-radius:28px;
+  border-radius:32px;
   text-align:center;
   box-shadow:0 30px 90px rgba(0,0,0,.18);
   z-index:2;
 }
 
-h1{font-weight:800;margin:10px 0}
-p{opacity:.85;margin-bottom:18px}
+h1{
+  font-weight:800;
+  margin:12px 0;
+}
+
+#title{
+  cursor:pointer;
+  user-select:none;
+}
+
+p{
+  opacity:.85;
+  margin-bottom:20px;
+  font-size:18px;
+}
 
 button{
-  padding:16px 32px;
+  padding:16px 34px;
   font-size:18px;
   font-weight:800;
   border-radius:999px;
@@ -58,7 +76,10 @@ button{
   box-shadow:0 14px 30px rgba(0,0,0,.18);
 }
 
-#yes{background:#ff2f7b;color:#fff}
+#yes{
+  background:#ff2f7b;
+  color:#fff;
+}
 
 #no{
   background:#e5e7eb;
@@ -70,8 +91,17 @@ button{
 .fake{font-size:13px;opacity:.65;min-height:18px}
 
 /* STATES */
-#questionState{}
-#resultState{display:none}
+#resultState{
+  display:none;
+}
+
+#resultState h1{
+  font-size:clamp(32px,4.5vw,46px);
+}
+
+#resultState p{
+  font-size:19px;
+}
 
 .freeze{
   position:fixed;
@@ -79,7 +109,8 @@ button{
   background:rgba(255,255,255,.96);
   display:grid;
   place-items:center;
-  font-size:clamp(28px,5vw,52px);
+  text-align:center;
+  font-size:clamp(30px,5vw,54px);
   font-weight:900;
   z-index:9998;
 }
@@ -98,9 +129,8 @@ audio{display:none}
 
 <div class="card">
 
-  <!-- QUESTION STATE -->
   <div id="questionState">
-    <h1>MiMi… 🧸💖</h1>
+    <h1 id="title">💖🧸MiMi🧸💖</h1>
     <p>I made this for the prettiest girl in the world.</p>
 
     <h1>Will you be my Valentine?</h1>
@@ -110,13 +140,12 @@ audio{display:none}
     <div class="fake" id="fake"></div>
   </div>
 
-  <!-- RESULT STATE -->
   <div id="resultState">
     <h1>OKAY OKAY 😭❤️</h1>
     <p>You win. Or actually…<br><strong>WE</strong> win.</p>
     <p>MiMi, this wasn’t just a page.<br>It’s a memory.</p>
     <h1>💍 Be mine. Always.</h1>
-    <img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" width="260">
+    <img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" width="320">
   </div>
 
 </div>
@@ -132,6 +161,56 @@ const qState = document.getElementById("questionState");
 const rState = document.getElementById("resultState");
 const canvas = document.getElementById("confetti");
 const music = document.getElementById("music");
+const title = document.getElementById("title");
+
+/* CANVAS FIX */
+function resizeCanvas(){
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+}
+resizeCanvas();
+addEventListener("resize", resizeCanvas);
+
+const confettiInstance = confetti.create(canvas,{
+  resize:false,
+  useWorker:true
+});
+
+/* SHAPES */
+const heart = confetti.shapeFromText({ text:"💖", scalar:2 });
+const rose  = confetti.shapeFromText({ text:"🌹", scalar:2 });
+
+/* 🌹 SLOW FLOATING ROSES (UPWARD) */
+function floatRoses(){
+  confettiInstance({
+    particleCount:6,
+    spread:30,
+    startVelocity:-6,
+    gravity:-0.15,
+    ticks:1200,
+    scalar:1.6,
+    shapes:[rose],
+    origin:{
+      x:Math.random(),
+      y:1.1
+    }
+  });
+}
+setInterval(floatRoses, 700);
+
+/* ROSE ON TITLE TAP */
+title.addEventListener("click",()=>{
+  confettiInstance({
+    particleCount:20,
+    spread:80,
+    startVelocity:35,
+    gravity:0.9,
+    ticks:260,
+    scalar:1.8,
+    shapes:[rose],
+    origin:{ x:0.5, y:0.35 }
+  });
+});
 
 /* NO BUTTON CHAOS */
 const jokes=[
@@ -152,56 +231,48 @@ let j=0,r=0;
 function moveNo(){
   no.style.left=Math.random()*(innerWidth-120)+"px";
   no.style.top=Math.random()*(innerHeight-60)+"px";
-  no.style.transform=rotate(${Math.random()*360}deg);
+  no.style.transform=`rotate(${Math.random()*360}deg)`;
   hint.textContent=jokes[j++%jokes.length];
   fake.textContent=reactions[r++%reactions.length];
 }
 no.addEventListener("mouseenter",moveNo);
 no.addEventListener("click",e=>e.preventDefault());
 
-/* CONFETTI */
-const confettiInstance = confetti.create(canvas,{resize:true,useWorker:true});
-const heart = confetti.shapeFromText({ text:"💖", scalar:2 });
+/* HEART RAIN AFTER YES */
 let raining=false;
-
 function startRain(){
   if(raining) return;
   raining=true;
-
   (function rain(){
     confettiInstance({
       particleCount:40,
-      spread:140,
+      spread:160,
       startVelocity:0,
       gravity:0.8,
-      ticks:600,
+      ticks:700,
       scalar:1.5,
       shapes:["square","circle",heart],
-      origin:{x:Math.random(),y:-0.1}
+      origin:{ x:Math.random(), y:-0.05 }
     });
     setTimeout(rain,120);
   })();
 }
 
-/* YES CLICK — SINGLE SOURCE OF TRUTH */
+/* YES CLICK */
 yes.addEventListener("click",()=>{
   music.play().catch(()=>{});
-
-  // REMOVE NO BUTTON COMPLETELY
   no.remove();
 
-  // FREEZE MOMENT
   const freeze=document.createElement("div");
   freeze.className="freeze";
   freeze.innerHTML="MiMi 💖<br>This moment is yours now.";
   document.body.appendChild(freeze);
 
-  // BIG BLAST
   confettiInstance({
-    particleCount:700,
+    particleCount:900,
     spread:180,
-    startVelocity:80,
-    scalar:1.6,
+    startVelocity:85,
+    scalar:1.7,
     shapes:["square","circle",heart]
   });
 
